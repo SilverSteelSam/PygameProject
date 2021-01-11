@@ -136,28 +136,31 @@ class Group_custom_draw(pygame.sprite.Group):
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, pos, cursor_pos):
         super().__init__()
-        self.rect = pygame.Rect(pos[0], pos[1], 20, 20) 
-        self.pos = pygame.math.Vector2(pos)
-        self.dir = pygame.math.Vector2(cursor_pos[0], cursor_pos[1]) - \
-                    pygame.math.Vector2(pos[0], pos[1])
-        pygame.math.Vector2.normalize_ip(self.dir)
-        self.particles = Group_custom_draw()
-        # vector = -1 * self.dir
-        
+        self.killed = pos == cursor_pos
+        if not self.killed:
+            self.rect = pygame.Rect(pos[0], pos[1], 20, 20) 
+            self.pos = pygame.math.Vector2(pos)
+            self.dir = pygame.math.Vector2(cursor_pos[0], cursor_pos[1]) - \
+                        pygame.math.Vector2(pos[0], pos[1])
+            pygame.math.Vector2.normalize_ip(self.dir)
+            self.particles = Group_custom_draw()     
         
     def draw(self, screen):
-        pygame.draw.circle(screen, (255, 255, 255), (self.pos.x, self.pos.y),
-                           12)
-        pygame.draw.circle(screen, (79, 201, 255), (self.pos.x, self.pos.y),
-                           10)
-        self.particles.draw(screen)
+        if self.alive():
+            pygame.draw.circle(screen, (255, 255, 255), (self.pos.x, self.pos.y),
+                               12)
+            pygame.draw.circle(screen, (79, 201, 255), (self.pos.x, self.pos.y),
+                               10)
+            self.particles.draw(screen)
         
     def update(self):
-        # if pygame.
-        self.pos += self.dir * 10
-        self.rect = pygame.Rect(self.pos[0], self.pos[1], 20, 20)
-        self.particles.add(Particle(self.rect.x, self.rect.y))
-        self.particles.update()
+        if self.killed:
+            self.kill()
+        if self.alive():
+            self.pos += self.dir * 10
+            self.rect = pygame.Rect(self.pos[0], self.pos[1], 20, 20)
+            self.particles.add(Particle(self.rect.x, self.rect.y))
+            self.particles.update()
 
 class MazeWall(pygame.sprite.Sprite):
     def __init__(self, pos1, width, height):
@@ -298,7 +301,7 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
     display = pygame.Surface((1920, 1080))
     
     running = True
-    # pygame.mouse.set_visible(False)
+    pygame.mouse.set_visible(False)
     
     # player_group = pygame.sprite.Group(player)
     bullets_group = Group_custom_draw()
@@ -423,6 +426,7 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
         
         for sprite in bullets_group:
             if pygame.sprite.spritecollideany(sprite, maze):
+                pygame.mixer.Sound('data/sounds/Fire_extinguish.wav').play()
                 bullets_group.remove(sprite)
                 
         if draw_crosshair[0]:
@@ -435,5 +439,5 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
         clock.tick(60)
 
 global RESOLUTION 
-RESOLUTION = (1280, 720)
+RESOLUTION = (1920, 1080)
 main_menu()
