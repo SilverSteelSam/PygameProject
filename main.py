@@ -18,6 +18,7 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
         self.shooting = False
         self.keys = []
         self.num_of_shoots = num_of_shoots
+        self.level = 0
         
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
@@ -212,9 +213,10 @@ def draw_text(text, font, color, surface, x, y): # Функция для отр�
 def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
     pygame.init()
     pygame.display.set_caption('Untitled Firefighter Game')
-    size = 1920, 1080# 1480, 935
+    size = RESOLUTION
     pygame.display.set_icon(pygame.image.load('data/icon.png'))
     screen = pygame.display.set_mode(size)
+    display = pygame.Surface((1920, 1080))
     # icon = pygame.Surface()
     
     pygame.mouse.set_visible(True)
@@ -244,7 +246,8 @@ def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
                 sys.exit()
             if event.type == pygame.MOUSEMOTION:
                 for button in all_buttons:  
-                    if button.rect.collidepoint(event.pos):
+                    if button.rect.collidepoint((event.pos[0] * 1920 / RESOLUTION[0],
+                                        event.pos[1] * 1080 / RESOLUTION[1])):
                         if draw != button.n:
                             pygame.mixer.Sound('data/sounds/Menu_btn.wav').play()
                         draw = button.n
@@ -262,9 +265,9 @@ def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
 
                 
         
-        screen.fill((61, 107, 214))
-        menu.draw(screen)
-        all_buttons.draw(screen)
+        display.fill((61, 107, 214))
+        menu.draw(display)
+        all_buttons.draw(display)
         
         if draw: # Circle motion 
             if x[0] >= 475 and x[1]:
@@ -275,10 +278,10 @@ def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
                 x = x[0] + 0.1, 0
                 if x[0] >= 480:
                     x = x[0], 1
-            pygame.draw.circle(screen, (255, 255, 255),
+            pygame.draw.circle(display, (255, 255, 255),
                                (x[0], [445, 525, 605, 685][draw - 1] + 10),
                                7)
-            
+        screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
         pygame.display.update()
 
 def options_menu(): # Функция, реализующая меню настроек
@@ -292,12 +295,15 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
     # player = Player(x, y)
     # maze = Maze(Mazewall sprites here)
     # keys - group of keys to detect collisions with them
+    display = pygame.Surface((1920, 1080))
     
     running = True
-    pygame.mouse.set_visible(False)
+    # pygame.mouse.set_visible(False)
     
     # player_group = pygame.sprite.Group(player)
     bullets_group = Group_custom_draw()
+    
+    screen = pygame.display.set_mode(RESOLUTION)
     
     # wall1 = MazeWall((0, 0), 1800, 50)
     # wall2 = MazeWall((1800, 0), 50, 1000)
@@ -318,13 +324,17 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
     # all_keys = pygame.sprite.Group(Key(300, 300, 'red'),
     #                                Key(300, 350, 'yellow'),
     #                                Key(300, 400, 'purple'))
+    if not player.level:
+        print(type(screen))
     
     
     all_keys = keys    
     
     draw_crosshair = False, 0
     crosshair = pygame.image.load('data/crosshair.png')
-    crosshair = pygame.transform.rotozoom(crosshair, 0, 1.3)
+    crosshair = pygame.transform.rotozoom(crosshair, 0, 2)
+    
+    print(crosshair.get_rect().center)
     
     clock = pygame.time.Clock()
 
@@ -358,26 +368,28 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
                 if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     player.moving_down = False
             elif event.type == pygame.MOUSEMOTION:
-                draw_crosshair = True, event.pos
+                draw_crosshair = True, ((event.pos[0] * 1920 / RESOLUTION[0] - 30,
+                                        event.pos[1] * 1080 / RESOLUTION[1] - 30))
                 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pygame.mixer.Sound('data/sounds/Shoot.wav').play()
                 bullets_group.add(Bullet(player.rect.center,
-                                         event.pos))
+                                         (event.pos[0] * 1920 / RESOLUTION[0],
+                                         event.pos[1] * 1080 / RESOLUTION[1])))
                 #print(len(bullets_group))
                 # player.shooting = True
                 # x, y = event.pos
 
-        screen.fill((132, 175, 156))
+        display.fill((132, 175, 156))
         
         player.update(maze)
-        player.draw(screen)
+        player.draw(display)
         
         # particles.draw(screen)
         
-        maze.draw(screen)
+        maze.draw(display)
         if all_keys:
-            all_keys.draw(screen)
+            all_keys.draw(display)
         
         # print(maze1.sprites()[0])
         # sprite1 = maze1.sprites()[0]
@@ -386,7 +398,7 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
         # all_keys.draw(screen)
         
         bullets_group.update()
-        bullets_group.draw(screen)
+        bullets_group.draw(display)
         
         # particles.add(Particle(600, 600))
         # particles.update()
@@ -415,10 +427,13 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
                 
         if draw_crosshair[0]:
             #print(draw_crosshair[1])
-            screen.blit(crosshair, (draw_crosshair[1][0] - 22.5,
-                                    draw_crosshair[1][1] - 22.5))
+            display.blit(crosshair, (draw_crosshair[1][0],
+                                    draw_crosshair[1][1]))
+        screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
         
         pygame.display.update()
         clock.tick(60)
 
+global RESOLUTION 
+RESOLUTION = (1280, 720)
 main_menu()
