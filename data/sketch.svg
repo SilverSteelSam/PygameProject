@@ -115,6 +115,90 @@
        width="131.03345"
        height="26.212248"
        id="rect308" />
+    <rect
+       x="-85.44136"
+       y="-90.782364"
+       width="131.03345"
+       height="26.212248"
+       id="rect2139-3-0-5" />
+    <rect
+       x="-85.44136"
+       y="-90.782364"
+       width="131.03345"
+       height="26.212248"
+       id="rect198" />
+    <rect
+       x="-85.44136"
+       y="-90.782364"
+       width="131.03345"
+       height="26.212248"
+       id="rect2139-3-0-5-0" />
+    <rect
+       x="-85.44136"
+       y="-90.782364"
+       width="131.03345"
+       height="26.212248"
+       id="rect228" />
+    <rect
+       x="-85.44136"
+       y="-90.782364"
+       width="131.03345"
+       height="26.212248"
+       id="rect2139-3-0-5-0-5" />
+    <rect
+       x="-85.44136"
+       y="-90.782364"
+       width="131.03345"
+       height="26.212248"
+       id="rect257" />
+    <rect
+       x="-85.44136"
+       y="-90.782364"
+       width="131.03345"
+       height="26.212248"
+       id="rect2139-3-0-5-2" />
+    <rect
+       x="-85.44136"
+       y="-90.782364"
+       width="131.03345"
+       height="26.212248"
+       id="rect302-7" />
+    <rect
+       x="-85.44136"
+       y="-90.782364"
+       width="131.03345"
+       height="26.212248"
+       id="rect2139-3-0-5-0-1" />
+    <rect
+       x="-85.44136"
+       y="-90.782364"
+       width="131.03345"
+       height="26.212248"
+       id="rect346" />
+    <rect
+       x="-85.44136"
+       y="-90.782364"
+       width="131.03345"
+       height="26.212248"
+       id="rect2139-3-0-5-0-5-5" />
+    <rect
+       x="-85.44136"
+       y="-90.782364"
+       width="131.03345"
+       height="26.212248"
+       id="rect419" />
+    <rect
+       x="-85.44136"
+       y="-90.782364"
+       width="131.03345"
+       height="26.212248"
+       id="rect2139-3-0-5-2-9" />
+    <rect
+       x="-85.44136"
+       y="-90.782364"
+       width="131.03345"
+       height="26.212248"
+       id="rect817" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -124,8 +208,8 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.125"
-     inkscape:cx="1210.6625"
-     inkscape:cy="136.64027"
+     inkscape:cx="4087.1415"
+     inkscape:cy="1086.7045"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -137,7 +221,8 @@
      inkscape:window-maximized="0"
      inkscape:snap-text-baseline="true"
      inkscape:pagecheckerboard="true"
-     inkscape:snap-object-midpoints="true" />
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-global="false" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -159,8 +244,8 @@
        id="rect1863"
        width="1914.5768"
        height="1074.5768"
-       x="-179.27269"
-       y="38.916683"
+       x="-1495.8394"
+       y="987.18335"
        inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\Lessons\21\4\data\path56.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
@@ -181,7 +266,7 @@
        transform="scale(0.26458333)" />
     <g
        id="g2127"
-       transform="matrix(0.64013012,0,0,0.64013012,-89.696395,162.63935)"
+       transform="matrix(0.64013012,0,0,0.64013012,-1406.2631,1110.906)"
        inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\Lessons\21\4\data\path56.png"
        inkscape:export-xdpi="10.26"
        inkscape:export-ydpi="10.26">
@@ -445,7 +530,7 @@
        xml:space="preserve"
        id="text2129"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect2131);fill:#ffffff;fill-opacity:1;stroke:none;"
-       transform="matrix(8.9224783,0,0,8.9224783,347.99104,1638.5056)"
+       transform="matrix(8.9224783,0,0,8.9224783,-968.57563,2586.7723)"
        inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\Lessons\21\4\data\path56.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96"><tspan
@@ -458,7 +543,7 @@
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.5833px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff">Firefighter Game</tspan></tspan></text>
     <g
        id="g2263"
-       transform="translate(-3.8120965,440.68508)"
+       transform="translate(-1320.3788,1388.9517)"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96">
       <rect
@@ -479,7 +564,7 @@
     </g>
     <g
        id="g2269"
-       transform="translate(-45.002002,442.7178)"
+       transform="translate(-1369.5062,1389.397)"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96">
       <rect
@@ -500,7 +585,7 @@
     </g>
     <g
        id="g2287"
-       transform="translate(-124.03848,479.21805)"
+       transform="translate(-1440.6051,1427.4847)"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96">
       <rect
@@ -524,7 +609,7 @@
     </g>
     <g
        id="g2275"
-       transform="translate(-131.55038,540.25605)"
+       transform="translate(-1448.117,1488.5227)"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96">
       <rect
@@ -542,34 +627,27 @@
            x="-85.441406"
            y="-81.245975"><tspan>Quit</tspan></tspan></text>
     </g>
-    <rect
-       style="opacity:1;fill:#3d6bd6;fill-opacity:1;stroke:#000000;stroke-width:0.972;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"
-       id="rect2366"
-       width="214.55637"
-       height="82.151321"
-       x="-134.30597"
-       y="-423.93359" />
     <text
        xml:space="preserve"
        id="text2137-4"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect2139-3);fill:#ffffff;fill-opacity:1;stroke:none;"
        transform="matrix(1.3704398,0,0,1.52867,3.5191314,-269.78307)" />
     <rect
-       style="opacity:1;fill:#3d6bd6;fill-opacity:1;stroke:#000000;stroke-width:1.17843;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"
+       style="opacity:1;fill:#3d6bd6;fill-opacity:1;stroke:#000000;stroke-width:5.42314;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"
        id="rect1863-8"
-       width="392.12045"
-       height="247.73906"
-       x="288.65643"
-       y="-248.75287"
-       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\Lessons\21\4\data\path56.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
+       width="1914.5768"
+       height="1074.5769"
+       x="290.77881"
+       y="-246.63051"
+       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\PygameProject\data\menu\pause_menu.png"
+       inkscape:export-xdpi="25.4"
+       inkscape:export-ydpi="25.4" />
     <g
        id="g2127-6"
-       transform="matrix(0.87540677,0,0,0.87540677,628.9537,-99.341917)"
-       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\Lessons\21\4\data\path56.png"
-       inkscape:export-xdpi="10.26"
-       inkscape:export-ydpi="10.26">
+       transform="matrix(2.1487592,0,0,2.1487592,2014.5318,160.87745)"
+       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\PygameProject\data\menu\pause_menu.png"
+       inkscape:export-xdpi="25.4"
+       inkscape:export-ydpi="25.4">
       <g
          id="g1996-2"
          transform="translate(-71.646271,-216.35917)">
@@ -830,22 +908,79 @@
        xml:space="preserve"
        id="text2137-4-1"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect2139-3-6);fill:#ffffff;fill-opacity:1;stroke:none;"
-       transform="matrix(1.3704398,0,0,1.52867,577.18093,-91.098437)"><tspan
+       transform="matrix(7.1701313,0,0,7.9979905,1662.6896,513.49524)"
+       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\PygameProject\data\menu\pause_menu.png"
+       inkscape:export-xdpi="25.4"
+       inkscape:export-ydpi="25.4"><tspan
          x="-85.441406"
-         y="-81.245975"><tspan>PAUSE</tspan></tspan></text>
+         y="-81.245975"><tspan>SETTINGS</tspan></tspan></text>
+    <rect
+       style="fill:#3d6bd6;fill-opacity:1;stroke:#000000;stroke-width:1.39631;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"
+       id="rect2366-2"
+       width="410.52032"
+       height="88.603691"
+       x="-576.35913"
+       y="-66.166283" />
     <text
        xml:space="preserve"
-       id="text2137-4-7"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect2139-3-5);fill:#ffffff;fill-opacity:1;stroke:none;"
-       transform="matrix(1.3704398,0,0,1.52867,438.3155,-55.198017)"><tspan
+       id="text2137-4-4-7-7"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.33507px;line-height:1.25;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect2139-3-0-5-2);fill:#ffffff;fill-opacity:1;stroke:none;"
+       transform="matrix(10.299079,0,0,11.488205,1270.4912,1019.3979)"
+       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\PygameProject\data\menu\resolution_btn.png"
+       inkscape:export-xdpi="25.423651"
+       inkscape:export-ydpi="25.423651"><tspan
          x="-85.441406"
-         y="-81.245975"><tspan>Continue</tspan></tspan></text>
+         y="-83.271986"><tspan>Resolution:
+</tspan></tspan></text>
+    <rect
+       style="fill:#3d6bd6;fill-opacity:1;stroke:#000000;stroke-width:1.28929;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"
+       id="rect2366-3"
+       width="330.93167"
+       height="93.710701"
+       x="-207.18063"
+       y="205.25642" />
     <text
        xml:space="preserve"
-       id="text2137-4-4"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect2139-3-0);fill:#ffffff;fill-opacity:1;stroke:none;"
-       transform="matrix(1.3704398,0,0,1.52867,437.27542,-28.862737)"><tspan
+       id="text2137-4-4-7-2-3"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5618px;line-height:1.25;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect2139-3-0-5-0-1);fill:#ffffff;fill-opacity:1;stroke:none;"
+       transform="matrix(8.1277481,0,0,9.084643,191.21123,743.51056)"><tspan
          x="-85.441406"
-         y="-81.245975"><tspan>Back to main menu</tspan></tspan></text>
+         y="-81.26535"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5618px;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Settings</tspan></tspan></text>
+    <rect
+       style="fill:#3d6bd6;fill-opacity:1;stroke:#000000;stroke-width:2.01806;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"
+       id="rect2366"
+       width="863.58038"
+       height="87.981941"
+       x="-1020.9395"
+       y="-209.46922" />
+    <text
+       xml:space="preserve"
+       id="text2137-4-4-7-2-4-6"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.33507px;line-height:1.25;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect2139-3-0-5-0-5-5);fill:#ffffff;fill-opacity:1;stroke:none;"
+       transform="matrix(10.299079,0,0,11.488205,1283.444,1306.192)"
+       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\PygameProject\data\menu\back_btn.png"
+       inkscape:export-xdpi="25.402506"
+       inkscape:export-ydpi="25.402506"><tspan
+         x="-85.441406"
+         y="-83.271986"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.33507px;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Back</tspan></tspan></text>
+    <rect
+       style="opacity:0;fill:#ffffff;fill-opacity:0;stroke:#7c0a00;stroke-width:0;stroke-linecap:round;stroke-linejoin:round"
+       id="rect691"
+       width="1436.8409"
+       height="1257.2358"
+       x="-1107.5649"
+       y="-969.86768" />
+    <text
+       xml:space="preserve"
+       id="text2137-4-4-7-7-4"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.33507px;line-height:1.25;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect2139-3-0-5-2-9);fill:#ffffff;fill-opacity:1;stroke:none;"
+       transform="matrix(10.299079,0,0,11.488205,1285.1241,1162.3673)"
+       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\PygameProject\data\menu\fps_btn.png"
+       inkscape:export-xdpi="25.351461"
+       inkscape:export-ydpi="25.351461"><tspan
+         x="-85.441406"
+         y="-83.271986"><tspan>Fps:</tspan></tspan></text>
   </g>
 </svg>
