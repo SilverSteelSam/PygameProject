@@ -316,7 +316,7 @@ def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
                     
                     pygame.mouse.set_visible(True)
                 elif draw == 2:
-                    options_menu()
+                    options_menu(screen)
             
 
                 
