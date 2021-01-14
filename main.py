@@ -1,10 +1,20 @@
 import pygame, sys, os, random
-#from pygame.locals import *
+# from pygame.locals import *
 from itertools import cycle
 from PIL import Image
 from math import sin, cos, pi
 
-class Player(pygame.sprite.Sprite): # Класс игрока, описывающий функционал персонажа
+global RESOLUTION, FPS, resolutions, fps_list
+# Resolutions: 16:9 (1024, 576); (1152, 648); (1280, 720);
+#                   (1366, 768); (1600, 900); (1920, 1080)
+RESOLUTION = (1920, 1080)
+FPS = 60
+resolutions = cycle([(1024, 576), (1152, 648), (1280, 720),
+                     (1366, 768), (1600, 900), (1920, 1080)])
+fps_list = cycle([30, 60, 120])
+
+
+class Player(pygame.sprite.Sprite):  # Класс игрока, описывающий функционал персонажа
 
     def __init__(self, x, y, num_of_shoots=None, level=0):
         super().__init__()
@@ -35,9 +45,9 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
         spd = 7
         if self.moving_down:
             for sprite in pygame.sprite.spritecollide(Dummy(pygame.Rect(self.rect.x,
-                                                                     self.rect.y + spd,
-                                                                     self.rect.w,
-                                                                     self.rect.h)),
+                                                                        self.rect.y + spd,
+                                                                        self.rect.w,
+                                                                        self.rect.h)),
                                                       obstacles,
                                                       dokill=False):
                 if sprite.color in self.keys:
@@ -51,12 +61,11 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
                                                    obstacles)):
                 self.rect.y += spd
 
-
         if self.moving_left:
             for sprite in pygame.sprite.spritecollide(Dummy(pygame.Rect(self.rect.x - spd,
-                                                                     self.rect.y,
-                                                                     self.rect.w,
-                                                                     self.rect.h)),
+                                                                        self.rect.y,
+                                                                        self.rect.w,
+                                                                        self.rect.h)),
                                                       obstacles,
                                                       dokill=False):
                 if sprite.color in self.keys:
@@ -70,9 +79,9 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
                 self.rect.x -= spd
         if self.moving_up:
             for sprite in pygame.sprite.spritecollide(Dummy(pygame.Rect(self.rect.x,
-                                                                     self.rect.y - spd,
-                                                                     self.rect.w,
-                                                                     self.rect.h)),
+                                                                        self.rect.y - spd,
+                                                                        self.rect.w,
+                                                                        self.rect.h)),
                                                       obstacles,
                                                       dokill=False):
                 if sprite.color in self.keys:
@@ -86,9 +95,9 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
                 self.rect.y -= spd
         if self.moving_right:
             for sprite in pygame.sprite.spritecollide(Dummy(pygame.Rect(self.rect.x + spd,
-                                                                     self.rect.y,
-                                                                     self.rect.w,
-                                                                     self.rect.h)),
+                                                                        self.rect.y,
+                                                                        self.rect.w,
+                                                                        self.rect.h)),
                                                       obstacles,
                                                       dokill=False):
                 if sprite.color in self.keys:
@@ -106,13 +115,14 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
         self.moving_left = False
         self.moving_right = False
         self.moving_up = False
-    
+
+
 class Car(pygame.sprite.Sprite):
-    MAX_SPEED = 10 / FPS  # pixels per second
+    MAX_SPEED = 500 / FPS  # pixels per second
 
     def __init__(self, x, y):
         super().__init__()
-        self.image = load_image("data/current_car.png")
+        self.image = load_image("current_car.png")
 
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -127,23 +137,22 @@ class Car(pygame.sprite.Sprite):
     def speed_change(self, direction):
         if not direction:
             self.spd = 0
-            return
-        if abs(self.spd) <= Car.MAX_SPEED:
-            self.spd += direction * Car.MAX_SPEED / 3
+        elif abs(self.spd) < Car.MAX_SPEED:
+            self.spd += direction * Car.MAX_SPEED / 500
 
     def wheeling(self, direction):
-        self.angle += direction * self.spd
+        self.angle += direction * self.spd / 5
 
     def update(self):
-        Image.open("data/car.png").rotate(self.angle).save("data/current.car")
+        Image.open("data/car.png").rotate(self.angle).save("data/current_car.png")
         x, y = self.rect.x, self.rect.y
-        self.image = load_image("data/current_car.png")
+        self.image = load_image("current_car.png")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
 
-        self.rect.x += self.spd * cos(self.angle / 180 * pi)
-        self.rect.y += self.spd * sin(self.angle / 180 * pi)
+        self.rect.y += self.spd * cos(self.angle * pi / 180)
+        self.rect.x += self.spd * sin(self.angle * pi / 180)
 
 
 class Key(pygame.sprite.Sprite):
@@ -158,14 +167,15 @@ class Key(pygame.sprite.Sprite):
 
         self.color = color
 
-    
+
 class Particle(pygame.sprite.Sprite):
     def __init__(self, x, y,
                  r=0,
                  x_vel=0,
                  y_vel=0):
         super().__init__()
-        r, x_vel, y_vel = random.randint(6, 12), random.randint(0, 30) / 10 - 1, random.randint(0, 30) / 10 - 1
+        r, x_vel, y_vel = random.randint(6, 12), random.randint(0, 30) / 10 - 1, random.randint(0,
+                                                                                                30) / 10 - 1
         self.rect = pygame.rect.Rect(x, y, 2 * r, 2 * r)
         self.x_vel = x_vel
         self.y_vel = y_vel
@@ -182,13 +192,14 @@ class Particle(pygame.sprite.Sprite):
         self.r -= 0.2
         if self.r <= 0:
             self.kill()
-        
+
 
 class Dummy(pygame.sprite.Sprite):
     def __init__(self, rect):
         super().__init__()
         self.rect = rect
-        
+
+
 class Button(pygame.sprite.Sprite):
     def __init__(self, image_path, number, x, y, group):
         super().__init__(group)
@@ -197,12 +208,13 @@ class Button(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.n = number
-        
+
 
 class Group_custom_draw(pygame.sprite.Group):
     def draw(self, screen):
         for spr in self.sprites():
             spr.draw(screen)
+
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, pos, cursor_pos):
@@ -212,7 +224,7 @@ class Bullet(pygame.sprite.Sprite):
             self.rect = pygame.Rect(pos[0], pos[1], 20, 20)
             self.pos = pygame.math.Vector2(pos)
             self.dir = pygame.math.Vector2(cursor_pos[0], cursor_pos[1]) - \
-                        pygame.math.Vector2(pos[0], pos[1])
+                       pygame.math.Vector2(pos[0], pos[1])
             pygame.math.Vector2.normalize_ip(self.dir)
             self.particles = Group_custom_draw()
 
@@ -232,7 +244,7 @@ class Bullet(pygame.sprite.Sprite):
             self.rect = pygame.Rect(self.pos[0], self.pos[1], 20, 20)
             self.particles.add(Particle(self.rect.x, self.rect.y))
             self.particles.update()
-        
+
 
 class MazeWall(pygame.sprite.Sprite):
     def __init__(self, pos1, width, height, color=0, isfire=False):
@@ -257,22 +269,22 @@ class MazeWall(pygame.sprite.Sprite):
     def move(self, x, y):
         self.rect.x += x
         self.rect.y += y
-        
-        
+
+
 class Maze(pygame.sprite.Group):
     def __init__(self, *sprites):
-        super().__init__(sprites) #ДОДЕЛАТЬ---------------
+        super().__init__(sprites)  # ДОДЕЛАТЬ---------------
         # SPRITES WITH MAZE COLUMN
-        #print(self.up_left)
+        # print(self.up_left)
 
     def draw(self, screen):
         for sprite in self.sprites():
             sprite.draw(screen)
 
-
     def move(self, x, y):
         for sprite in self.sprites():
             sprite.move(x, y)
+
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -290,18 +302,16 @@ def load_image(name, colorkey=None):
         image = image.convert_alpha()
     return image
 
-def draw_text(text,
-              color,
-              surface,
-              x, y,
-              font=0): # Функция для отрисовки текста
+
+def draw_text(text, color, surface, x, y, font=0):  # Функция для отрисовки текста
     font = pygame.font.Font(None, 50)
     text_obj = font.render(text, True, color)
     text_rect = text_obj.get_rect()
     text_rect.topleft = (x, y)
     surface.blit(text_obj, text_rect)
 
-def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
+
+def main_menu():  # -----------------MAIN MENU FUNCTION------------------------
     pygame.init()
     pygame.mixer.init()
     pygame.font.init()
@@ -332,17 +342,16 @@ def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
     x = 480, 1
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or\
-                (event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and draw == 4) or\
-                (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+            if event.type == pygame.QUIT or \
+                    (event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and draw == 4) or \
+                    (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEMOTION:
                 for button in all_buttons:
                     if button.rect.collidepoint((event.pos[0] * 1920 / RESOLUTION[0],
-                                        event.pos[1] * 1080 / RESOLUTION[1])):
+                                                 event.pos[1] * 1080 / RESOLUTION[1])):
                         if draw != button.n:
-
                             pygame.mixer.Sound('data/sounds/menu_btn.wav').play()
                         draw = button.n
 
@@ -359,14 +368,11 @@ def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
                 elif draw == 2:
                     options_menu()
 
-
-
-
         display.fill((61, 107, 214))
         menu.draw(display)
         all_buttons.draw(display)
 
-        if draw: # Circle motion
+        if draw:  # Circle motion
             if x[0] >= 475 and x[1]:
                 x = x[0] - 0.2, 1
                 if x[0] <= 475:
@@ -381,9 +387,9 @@ def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
         screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
         pygame.display.update()
         clock.tick(60)
-    
 
-def options_menu(screen): # Функция, реализующая меню настроек
+
+def options_menu(screen):  # Функция, реализующая меню настроек
     display = pygame.Surface((1920, 1080))
     pygame.mouse.set_visible(True)
 
@@ -405,17 +411,16 @@ def options_menu(screen): # Функция, реализующая меню на
     x = 80, 1
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or\
-                (event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and draw == 1) or\
-                (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+            if event.type == pygame.QUIT or \
+                    (event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and draw == 1) or \
+                    (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.mouse.set_visible(False)
                 return True
             if event.type == pygame.MOUSEMOTION:
                 for button in all_buttons:
                     if button.rect.collidepoint((event.pos[0] * 1920 / RESOLUTION[0],
-                                        event.pos[1] * 1080 / RESOLUTION[1])):
+                                                 event.pos[1] * 1080 / RESOLUTION[1])):
                         if draw != button.n:
-
                             pygame.mixer.Sound('data/sounds/menu_btn.wav').play()
                         draw = button.n
 
@@ -428,13 +433,11 @@ def options_menu(screen): # Функция, реализующая меню на
                 elif draw == 2:
                     options_menu(screen)
 
-
-
         display.fill((61, 107, 214))
         menu.draw(display)
         all_buttons.draw(display)
 
-        if draw: # Circle motion
+        if draw:  # Circle motion
             if x[0] >= 80 and x[1]:
                 x = x[0] - 0.2, 1
                 if x[0] <= 80:
@@ -449,9 +452,9 @@ def options_menu(screen): # Функция, реализующая меню на
         screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
         pygame.display.update()
         clock.tick(60)
-        
 
-def pause_menu(screen): # Функция, реализующая меню паузы
+
+def pause_menu(screen):  # Функция, реализующая меню паузы
     display = pygame.Surface((1920, 1080))
     pygame.mouse.set_visible(True)
 
@@ -473,17 +476,16 @@ def pause_menu(screen): # Функция, реализующая меню пау
     x = 80, 1
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or\
-                (event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and draw == 1) or\
-                (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+            if event.type == pygame.QUIT or \
+                    (event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and draw == 1) or \
+                    (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.mouse.set_visible(False)
                 return True
             if event.type == pygame.MOUSEMOTION:
                 for button in all_buttons:
                     if button.rect.collidepoint((event.pos[0] * 1920 / RESOLUTION[0],
-                                        event.pos[1] * 1080 / RESOLUTION[1])):
+                                                 event.pos[1] * 1080 / RESOLUTION[1])):
                         if draw != button.n:
-
                             pygame.mixer.Sound('data/sounds/menu_btn.wav').play()
                         draw = button.n
 
@@ -496,13 +498,11 @@ def pause_menu(screen): # Функция, реализующая меню пау
                 elif draw == 2:
                     options_menu(screen)
 
-
-
         display.fill((61, 107, 214))
         menu.draw(display)
         all_buttons.draw(display)
 
-        if draw: # Circle motion
+        if draw:  # Circle motion
             if x[0] >= 80 and x[1]:
                 x = x[0] - 0.2, 1
                 if x[0] <= 80:
@@ -519,7 +519,7 @@ def pause_menu(screen): # Функция, реализующая меню пау
         clock.tick(60)
 
 
-def game(screen, maze, player, keys=False): # Функция, реализующая саму игру
+def game(screen, maze, player, keys=False):  # Функция, реализующая саму игру
 
     # player = Player(x, y)
     # maze = Maze(Mazewall sprites here)
@@ -558,7 +558,6 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
         portal_level2.rect = surface.get_rect()
         portal_level2.rect.x = 1520
         portal_level2.rect.y = 200
-
 
     all_keys = keys
 
@@ -601,7 +600,7 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
                     player.moving_down = False
             elif event.type == pygame.MOUSEMOTION:
                 draw_crosshair = True, ((event.pos[0] * 1920 / RESOLUTION[0] - 30,
-                                        event.pos[1] * 1080 / RESOLUTION[1] - 30))
+                                         event.pos[1] * 1080 / RESOLUTION[1] - 30))
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 sound = pygame.mixer.Sound('data/sounds/shoot.wav')
@@ -609,7 +608,7 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
                 sound.play()
                 bullets_group.add(Bullet(player.rect.center,
                                          (event.pos[0] * 1920 / RESOLUTION[0],
-                                         event.pos[1] * 1080 / RESOLUTION[1])))
+                                          event.pos[1] * 1080 / RESOLUTION[1])))
 
         if back:
             display.fill((132, 175, 156))
@@ -685,7 +684,7 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
 
             if draw_crosshair[0]:
                 display.blit(crosshair, (draw_crosshair[1][0],
-                                        draw_crosshair[1][1]))
+                                         draw_crosshair[1][1]))
             screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
 
             pygame.display.update()
@@ -694,12 +693,60 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
             running = False
 
 
-global RESOLUTION, FPS, resolutions, fps_list
-# Resolutions: 16:9 (1024, 576); (1152, 648); (1280, 720);
-#                   (1366, 768); (1600, 900); (1920, 1080)
-RESOLUTION = (1920, 1080)
-FPS = 60
-resolutions = cycle([(1024, 576), (1152, 648), (1280, 720),
-               (1366, 768), (1600, 900), (1920, 1080)])
-fps_list = cycle([30, 60, 120])
-main_menu()
+def race(screen, car):
+    pygame.init()
+
+    display = pygame.Surface((1920, 1080))
+
+    back = True
+    running = True
+    pygame.mouse.set_visible(False)
+
+    screen = pygame.display.set_mode(RESOLUTION)
+    screen.fill("blue")
+
+    draw_crosshair = False, 0
+    crosshair = pygame.image.load('data/crosshair.png')
+    crosshair = pygame.transform.rotozoom(crosshair, 0, 2)
+
+    clock = pygame.time.Clock()
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    back = pause_menu(screen)
+
+        if pygame.key.get_pressed()[pygame.K_w] or pygame.key.get_pressed()[pygame.K_UP]:
+            car.speed_change(1)
+
+        if pygame.key.get_pressed()[pygame.K_s] or pygame.key.get_pressed()[pygame.K_DOWN]:
+            car.speed_change(-1)
+
+        if pygame.key.get_pressed()[pygame.K_a] or pygame.key.get_pressed()[pygame.K_LEFT]:
+            car.wheeling(1)
+
+        if pygame.key.get_pressed()[pygame.K_d] or pygame.key.get_pressed()[pygame.K_RIGHT]:
+            car.wheeling(-1)
+
+        if not any([pygame.key.get_pressed()[pygame.K_w], pygame.key.get_pressed()[pygame.K_s],
+                    pygame.key.get_pressed()[pygame.K_a], pygame.key.get_pressed()[pygame.K_d],
+                    pygame.key.get_pressed()[pygame.K_UP], pygame.key.get_pressed()[pygame.K_DOWN],
+                    pygame.key.get_pressed()[pygame.K_LEFT], pygame.key.get_pressed()[pygame.K_RIGHT]]):
+            car.speed_change(0)
+
+        print(car.rect.x, car.rect.y)
+        print(car.spd)
+
+        screen.fill("blue")
+        car.update()
+        car.draw(screen)
+        pygame.display.update()
+        clock.tick(FPS)
+
+
+# main_menu()
+race(pygame.display.set_mode(RESOLUTION),
+     Car(0, 0))
