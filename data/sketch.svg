@@ -207,9 +207,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.125"
-     inkscape:cx="4087.1415"
-     inkscape:cy="1086.7045"
+     inkscape:zoom="0.0625"
+     inkscape:cx="3185.3091"
+     inkscape:cy="1217.297"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -222,7 +222,8 @@
      inkscape:snap-text-baseline="true"
      inkscape:pagecheckerboard="true"
      inkscape:snap-object-midpoints="true"
-     inkscape:snap-global="false" />
+     inkscape:snap-global="false"
+     showguides="false" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -637,17 +638,17 @@
        id="rect1863-8"
        width="1914.5768"
        height="1074.5769"
-       x="290.77881"
-       y="-246.63051"
-       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\PygameProject\data\menu\pause_menu.png"
-       inkscape:export-xdpi="25.4"
-       inkscape:export-ydpi="25.4" />
+       x="256.91214"
+       y="-197.94719"
+       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\PygameProject\data\menu\settings_menu.png"
+       inkscape:export-xdpi="25.400002"
+       inkscape:export-ydpi="25.400002" />
     <g
        id="g2127-6"
-       transform="matrix(2.1487592,0,0,2.1487592,2014.5318,160.87745)"
-       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\PygameProject\data\menu\pause_menu.png"
-       inkscape:export-xdpi="25.4"
-       inkscape:export-ydpi="25.4">
+       transform="matrix(2.1487592,0,0,2.1487592,2020.8819,899.59411)"
+       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\PygameProject\data\menu\settings_menu.png"
+       inkscape:export-xdpi="25.400002"
+       inkscape:export-ydpi="25.400002">
       <g
          id="g1996-2"
          transform="translate(-71.646271,-216.35917)">
@@ -908,10 +909,10 @@
        xml:space="preserve"
        id="text2137-4-1"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect2139-3-6);fill:#ffffff;fill-opacity:1;stroke:none;"
-       transform="matrix(7.1701313,0,0,7.9979905,1662.6896,513.49524)"
-       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\PygameProject\data\menu\pause_menu.png"
-       inkscape:export-xdpi="25.4"
-       inkscape:export-ydpi="25.4"><tspan
+       transform="matrix(7.1701313,0,0,7.9979905,1628.823,562.17857)"
+       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\PygameProject\data\menu\settings_menu.png"
+       inkscape:export-xdpi="25.400002"
+       inkscape:export-ydpi="25.400002"><tspan
          x="-85.441406"
          y="-81.245975"><tspan>SETTINGS</tspan></tspan></text>
     <rect
