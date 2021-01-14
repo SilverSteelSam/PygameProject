@@ -1,17 +1,20 @@
 import pygame, sys, os, random
-from itertools import cycle
 #from pygame.locals import *
+from itertools import cycle
+from PIL import Image
+from math import sin, cos, pi
 
 class Player(pygame.sprite.Sprite): # Класс игрока, описывающий функционал персонажа
+
     def __init__(self, x, y, num_of_shoots=None, level=0):
         super().__init__()
         self.image = pygame.image.load('data/player.png')
         self.image = pygame.transform.rotozoom(self.image, 0, 0.3)
-        
+
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        
+
         self.moving_right = False
         self.moving_left = False
         self.moving_up = False
@@ -20,18 +23,18 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
         self.keys = []
         self.num_of_shoots = num_of_shoots
         self.level = level
-        
+
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
-              
+
     def move(self, x, y):
         self.rect.x = x
         self.rect.y = y
-        
+
     def update(self, obstacles):
         spd = 7
         if self.moving_down:
-            for sprite in pygame.sprite.spritecollide(Dummy(pygame.Rect(self.rect.x, 
+            for sprite in pygame.sprite.spritecollide(Dummy(pygame.Rect(self.rect.x,
                                                                      self.rect.y + spd,
                                                                      self.rect.w,
                                                                      self.rect.h)),
@@ -40,17 +43,17 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
                 if sprite.color in self.keys:
                     pygame.mixer.Sound('data/sounds/dooropen.wav').play()
                     sprite.kill()
-                
-            if not (pygame.sprite.spritecollideany(Dummy(pygame.Rect(self.rect.x, 
+
+            if not (pygame.sprite.spritecollideany(Dummy(pygame.Rect(self.rect.x,
                                                                      self.rect.y + spd,
                                                                      self.rect.w,
                                                                      self.rect.h)),
                                                    obstacles)):
                 self.rect.y += spd
 
-                
+
         if self.moving_left:
-            for sprite in pygame.sprite.spritecollide(Dummy(pygame.Rect(self.rect.x - spd, 
+            for sprite in pygame.sprite.spritecollide(Dummy(pygame.Rect(self.rect.x - spd,
                                                                      self.rect.y,
                                                                      self.rect.w,
                                                                      self.rect.h)),
@@ -59,14 +62,14 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
                 if sprite.color in self.keys:
                     pygame.mixer.Sound('data/sounds/dooropen.wav').play()
                     sprite.kill()
-            if not (pygame.sprite.spritecollideany(Dummy(pygame.Rect(self.rect.x - spd, 
+            if not (pygame.sprite.spritecollideany(Dummy(pygame.Rect(self.rect.x - spd,
                                                                      self.rect.y,
                                                                      self.rect.w,
                                                                      self.rect.h)),
                                                    obstacles)):
                 self.rect.x -= spd
         if self.moving_up:
-            for sprite in pygame.sprite.spritecollide(Dummy(pygame.Rect(self.rect.x, 
+            for sprite in pygame.sprite.spritecollide(Dummy(pygame.Rect(self.rect.x,
                                                                      self.rect.y - spd,
                                                                      self.rect.w,
                                                                      self.rect.h)),
@@ -75,14 +78,14 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
                 if sprite.color in self.keys:
                     pygame.mixer.Sound('data/sounds/dooropen.wav').play()
                     sprite.kill()
-            if not (pygame.sprite.spritecollideany(Dummy(pygame.Rect(self.rect.x, 
+            if not (pygame.sprite.spritecollideany(Dummy(pygame.Rect(self.rect.x,
                                                                      self.rect.y - spd,
                                                                      self.rect.w,
                                                                      self.rect.h)),
                                                    obstacles)):
                 self.rect.y -= spd
         if self.moving_right:
-            for sprite in pygame.sprite.spritecollide(Dummy(pygame.Rect(self.rect.x + spd, 
+            for sprite in pygame.sprite.spritecollide(Dummy(pygame.Rect(self.rect.x + spd,
                                                                      self.rect.y,
                                                                      self.rect.w,
                                                                      self.rect.h)),
@@ -91,19 +94,58 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
                 if sprite.color in self.keys:
                     pygame.mixer.Sound('data/sounds/dooropen.wav').play()
                     sprite.kill()
-            if not (pygame.sprite.spritecollideany(Dummy(pygame.Rect(self.rect.x + spd, 
+            if not (pygame.sprite.spritecollideany(Dummy(pygame.Rect(self.rect.x + spd,
                                                                      self.rect.y,
                                                                      self.rect.w,
                                                                      self.rect.h)),
                                                    obstacles)):
                 self.rect.x += spd
-            
+
     def stop_moving(self):
         self.moving_down = False
         self.moving_left = False
         self.moving_right = False
         self.moving_up = False
     
+class Car(pygame.sprite.Sprite):
+    MAX_SPEED = 10 / FPS  # pixels per second
+
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = load_image("data/current_car.png")
+
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+        self.spd = 0
+        self.angle = 0
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+    def speed_change(self, direction):
+        if not direction:
+            self.spd = 0
+            return
+        if abs(self.spd) <= Car.MAX_SPEED:
+            self.spd += direction * Car.MAX_SPEED / 3
+
+    def wheeling(self, direction):
+        self.angle += direction * self.spd
+
+    def update(self):
+        Image.open("data/car.png").rotate(self.angle).save("data/current.car")
+        x, y = self.rect.x, self.rect.y
+        self.image = load_image("data/current_car.png")
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+        self.rect.x += self.spd * cos(self.angle / 180 * pi)
+        self.rect.y += self.spd * sin(self.angle / 180 * pi)
+
+
 class Key(pygame.sprite.Sprite):
     def __init__(self, x, y, color):
         super().__init__()
@@ -113,13 +155,13 @@ class Key(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        
+
         self.color = color
 
-
+    
 class Particle(pygame.sprite.Sprite):
     def __init__(self, x, y,
-                 r=0, 
+                 r=0,
                  x_vel=0,
                  y_vel=0):
         super().__init__()
@@ -128,26 +170,25 @@ class Particle(pygame.sprite.Sprite):
         self.x_vel = x_vel
         self.y_vel = y_vel
         self.r = r
-        
+
     def draw(self, screen):
-        pygame.draw.circle(screen, (71, 201, 255), 
+        pygame.draw.circle(screen, (71, 201, 255),
                            (self.rect.x, self.rect.y),
                            self.r)
-        
+
     def update(self):
         self.rect.x += self.x_vel
         self.rect.y += self.y_vel
         self.r -= 0.2
         if self.r <= 0:
             self.kill()
+        
 
-    
 class Dummy(pygame.sprite.Sprite):
     def __init__(self, rect):
         super().__init__()
-        self.rect = rect   
+        self.rect = rect
         
-
 class Button(pygame.sprite.Sprite):
     def __init__(self, image_path, number, x, y, group):
         super().__init__(group)
@@ -157,24 +198,24 @@ class Button(pygame.sprite.Sprite):
         self.rect.y = y
         self.n = number
         
+
 class Group_custom_draw(pygame.sprite.Group):
     def draw(self, screen):
         for spr in self.sprites():
             spr.draw(screen)
-        
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, pos, cursor_pos):
         super().__init__()
         self.killed = pos == cursor_pos
         if not self.killed:
-            self.rect = pygame.Rect(pos[0], pos[1], 20, 20) 
+            self.rect = pygame.Rect(pos[0], pos[1], 20, 20)
             self.pos = pygame.math.Vector2(pos)
             self.dir = pygame.math.Vector2(cursor_pos[0], cursor_pos[1]) - \
                         pygame.math.Vector2(pos[0], pos[1])
             pygame.math.Vector2.normalize_ip(self.dir)
-            self.particles = Group_custom_draw()     
-        
+            self.particles = Group_custom_draw()
+
     def draw(self, screen):
         if self.alive():
             pygame.draw.circle(screen, (255, 255, 255), (self.pos.x, self.pos.y),
@@ -182,7 +223,7 @@ class Bullet(pygame.sprite.Sprite):
             pygame.draw.circle(screen, (79, 201, 255), (self.pos.x, self.pos.y),
                                10)
             self.particles.draw(screen)
-        
+
     def update(self):
         if self.killed:
             self.kill()
@@ -191,6 +232,7 @@ class Bullet(pygame.sprite.Sprite):
             self.rect = pygame.Rect(self.pos[0], self.pos[1], 20, 20)
             self.particles.add(Particle(self.rect.x, self.rect.y))
             self.particles.update()
+        
 
 class MazeWall(pygame.sprite.Sprite):
     def __init__(self, pos1, width, height, color=0, isfire=False):
@@ -198,7 +240,7 @@ class MazeWall(pygame.sprite.Sprite):
         self.rect = pygame.Rect(pos1[0], pos1[1], width, height)
         self.color = color
         self.isfire = isfire
-        
+
     def draw(self, screen):
         if self.isfire:
             pygame.draw.rect(screen, (100, 0, 0), self.rect)
@@ -208,31 +250,30 @@ class MazeWall(pygame.sprite.Sprite):
             elif self.color == 'purple':
                 pygame.draw.rect(screen, (44, 0, 128), self.rect)
             elif self.color == 'yellow':
-                pygame.draw.rect(screen, (255, 211, 0), self.rect)    
+                pygame.draw.rect(screen, (255, 211, 0), self.rect)
             elif self.color == 'red':
                 pygame.draw.rect(screen, (141, 2, 31), self.rect)
-    
+
     def move(self, x, y):
         self.rect.x += x
         self.rect.y += y
         
-
+        
 class Maze(pygame.sprite.Group):
     def __init__(self, *sprites):
         super().__init__(sprites) #ДОДЕЛАТЬ---------------
         # SPRITES WITH MAZE COLUMN
         #print(self.up_left)
-        
+
     def draw(self, screen):
         for sprite in self.sprites():
             sprite.draw(screen)
-            
-    
+
+
     def move(self, x, y):
         for sprite in self.sprites():
             sprite.move(x, y)
-        
-        
+
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
     # если файл не существует, то выходим
@@ -262,23 +303,23 @@ def draw_text(text,
 
 def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
     pygame.init()
-    pygame.mixer.init()    
+    pygame.mixer.init()
     pygame.font.init()
     pygame.display.set_caption('Untitled Firefighter Game')
     size = RESOLUTION
     pygame.display.set_icon(pygame.image.load('data/icon.png'))
     screen = pygame.display.set_mode(size)
     display = pygame.Surface((1920, 1080))
-    
+
     pygame.mouse.set_visible(True)
-    
+
     clock = pygame.time.Clock()
-    
+
     all_buttons = pygame.sprite.Group()
     menu = pygame.sprite.Group()
     menu_sprite = pygame.sprite.Sprite()
     menu_sprite.image = load_image('menu/menu.png')
-    menu_sprite.rect = menu_sprite.image.get_rect()    
+    menu_sprite.rect = menu_sprite.image.get_rect()
     menu_sprite.rect.x = -1
     menu_sprite.rect.y = -1
     menu.add(menu_sprite)
@@ -286,7 +327,7 @@ def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
     _ = Button('data/menu/options_btn.png', 2, 510, 510, all_buttons)
     _ = Button('data/menu/credits_btn.png', 3, 510, 590, all_buttons)
     _ = Button('data/menu/quit_btn.png', 4, 510, 670, all_buttons)
-    
+
     draw = 0
     x = 480, 1
     while True:
@@ -297,14 +338,14 @@ def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEMOTION:
-                for button in all_buttons:  
+                for button in all_buttons:
                     if button.rect.collidepoint((event.pos[0] * 1920 / RESOLUTION[0],
                                         event.pos[1] * 1080 / RESOLUTION[1])):
                         if draw != button.n:
-                            
+
                             pygame.mixer.Sound('data/sounds/menu_btn.wav').play()
                         draw = button.n
-            
+
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if draw == 1:
                     game(screen,
@@ -313,19 +354,19 @@ def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
                               MazeWall((0, 1080), 1920, 1),
                               MazeWall((0, -1), 1, 1080)),
                          Player(900, 900))
-                    
+
                     pygame.mouse.set_visible(True)
                 elif draw == 2:
                     options_menu()
-            
 
-                
-        
+
+
+
         display.fill((61, 107, 214))
         menu.draw(display)
         all_buttons.draw(display)
-        
-        if draw: # Circle motion 
+
+        if draw: # Circle motion
             if x[0] >= 475 and x[1]:
                 x = x[0] - 0.2, 1
                 if x[0] <= 475:
@@ -340,25 +381,26 @@ def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
         screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
         pygame.display.update()
         clock.tick(60)
+    
 
 def options_menu(screen): # Функция, реализующая меню настроек
     display = pygame.Surface((1920, 1080))
     pygame.mouse.set_visible(True)
-    
+
     clock = pygame.time.Clock()
-    
+
     all_buttons = pygame.sprite.Group()
     menu = pygame.sprite.Group()
     menu_sprite = pygame.sprite.Sprite()
     menu_sprite.image = load_image('menu/settings_menu.png')
-    menu_sprite.rect = menu_sprite.image.get_rect()    
+    menu_sprite.rect = menu_sprite.image.get_rect()
     menu_sprite.rect.x = -1
     menu_sprite.rect.y = -1
     menu.add(menu_sprite)
     _ = Button('data/menu/continue_btn.png', 1, 105, 240, all_buttons)
     _ = Button('data/menu/settings_btn.png', 2, 110, 350, all_buttons)
     _ = Button('data/menu/back_btn.png', 3, 110, 455, all_buttons)
-    
+
     draw = 0
     x = 80, 1
     while True:
@@ -369,30 +411,30 @@ def options_menu(screen): # Функция, реализующая меню на
                 pygame.mouse.set_visible(False)
                 return True
             if event.type == pygame.MOUSEMOTION:
-                for button in all_buttons:  
+                for button in all_buttons:
                     if button.rect.collidepoint((event.pos[0] * 1920 / RESOLUTION[0],
                                         event.pos[1] * 1080 / RESOLUTION[1])):
                         if draw != button.n:
-                            
+
                             pygame.mixer.Sound('data/sounds/menu_btn.wav').play()
                         draw = button.n
-            
+
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if draw == 3:
                     return False
-                    
+
                     pygame.mouse.set_visible(True)
-                    
+
                 elif draw == 2:
                     options_menu(screen)
 
-                
-        
+
+
         display.fill((61, 107, 214))
         menu.draw(display)
         all_buttons.draw(display)
-        
-        if draw: # Circle motion 
+
+        if draw: # Circle motion
             if x[0] >= 80 and x[1]:
                 x = x[0] - 0.2, 1
                 if x[0] <= 80:
@@ -407,26 +449,26 @@ def options_menu(screen): # Функция, реализующая меню на
         screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
         pygame.display.update()
         clock.tick(60)
-    
+        
 
 def pause_menu(screen): # Функция, реализующая меню паузы
     display = pygame.Surface((1920, 1080))
     pygame.mouse.set_visible(True)
-    
+
     clock = pygame.time.Clock()
-    
+
     all_buttons = pygame.sprite.Group()
     menu = pygame.sprite.Group()
     menu_sprite = pygame.sprite.Sprite()
     menu_sprite.image = load_image('menu/pause_menu.png')
-    menu_sprite.rect = menu_sprite.image.get_rect()    
+    menu_sprite.rect = menu_sprite.image.get_rect()
     menu_sprite.rect.x = -1
     menu_sprite.rect.y = -1
     menu.add(menu_sprite)
     _ = Button('data/menu/continue_btn.png', 1, 105, 240, all_buttons)
     _ = Button('data/menu/settings_btn.png', 2, 110, 350, all_buttons)
     _ = Button('data/menu/back_btn.png', 3, 110, 455, all_buttons)
-    
+
     draw = 0
     x = 80, 1
     while True:
@@ -437,30 +479,30 @@ def pause_menu(screen): # Функция, реализующая меню пау
                 pygame.mouse.set_visible(False)
                 return True
             if event.type == pygame.MOUSEMOTION:
-                for button in all_buttons:  
+                for button in all_buttons:
                     if button.rect.collidepoint((event.pos[0] * 1920 / RESOLUTION[0],
                                         event.pos[1] * 1080 / RESOLUTION[1])):
                         if draw != button.n:
-                            
+
                             pygame.mixer.Sound('data/sounds/menu_btn.wav').play()
                         draw = button.n
-            
+
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if draw == 3:
                     return False
-                    
+
                     pygame.mouse.set_visible(True)
-                    
+
                 elif draw == 2:
                     options_menu(screen)
 
-                
-        
+
+
         display.fill((61, 107, 214))
         menu.draw(display)
         all_buttons.draw(display)
-        
-        if draw: # Circle motion 
+
+        if draw: # Circle motion
             if x[0] >= 80 and x[1]:
                 x = x[0] - 0.2, 1
                 if x[0] <= 80:
@@ -475,7 +517,6 @@ def pause_menu(screen): # Функция, реализующая меню пау
         screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
         pygame.display.update()
         clock.tick(60)
-        
 
 
 def game(screen, maze, player, keys=False): # Функция, реализующая саму игру
@@ -484,84 +525,84 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
     # maze = Maze(Mazewall sprites here)
     # keys - group of keys to detect collisions with them
     display = pygame.Surface((1920, 1080))
-    
+
     back = True
-    
+
     running = True
     pygame.mouse.set_visible(False)
 
     bullets_group = Group_custom_draw()
-    
+
     screen = pygame.display.set_mode(RESOLUTION)
-    
+
     if not player.level:
         portals = pygame.sprite.Group()
         surface = pygame.Surface((100, 100))
         surface.fill((132, 175, 156))
         pygame.draw.circle(surface, (255, 255, 255), (50, 50), 50)
-        
+
         portal_tutorial = pygame.sprite.Sprite(portals)
         portal_tutorial.image = surface
         portal_tutorial.rect = surface.get_rect()
         portal_tutorial.rect.x = 240
         portal_tutorial.rect.y = 200
-        
+
         portal_level1 = pygame.sprite.Sprite(portals)
         portal_level1.image = surface
         portal_level1.rect = surface.get_rect()
         portal_level1.rect.x = 880
         portal_level1.rect.y = 200
-        
+
         portal_level2 = pygame.sprite.Sprite(portals)
         portal_level2.image = surface
         portal_level2.rect = surface.get_rect()
         portal_level2.rect.x = 1520
         portal_level2.rect.y = 200
-        
-    
-    all_keys = keys    
-    
+
+
+    all_keys = keys
+
     draw_crosshair = False, 0
     crosshair = pygame.image.load('data/crosshair.png')
     crosshair = pygame.transform.rotozoom(crosshair, 0, 2)
-    
+
     clock = pygame.time.Clock()
 
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False  
+                running = False
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 back = pause_menu(screen)
-            
-            elif event.type == pygame.KEYDOWN:   
+
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     player.moving_right = True
-                    
+
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     player.moving_left = True
-                
+
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     player.moving_up = True
-                    
+
                 if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                    player.moving_down = True      
-            elif event.type == pygame.KEYUP:               
+                    player.moving_down = True
+            elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     player.moving_right = False
-                    
+
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     player.moving_left = False
-                    
+
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     player.moving_up = False
-                    
+
                 if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     player.moving_down = False
             elif event.type == pygame.MOUSEMOTION:
                 draw_crosshair = True, ((event.pos[0] * 1920 / RESOLUTION[0] - 30,
                                         event.pos[1] * 1080 / RESOLUTION[1] - 30))
-                
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 sound = pygame.mixer.Sound('data/sounds/shoot.wav')
                 sound.set_volume(0.1)
@@ -572,14 +613,14 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
 
         if back:
             display.fill((132, 175, 156))
-            
+
             player.update(maze)
             player.draw(display)
-            
+
             maze.draw(display)
             if all_keys:
                 all_keys.draw(display)
-                
+
             if not player.level:
                 portals.draw(display)
                 if pygame.sprite.collide_rect(portal_tutorial, player):
@@ -591,8 +632,8 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
                          keys=pygame.sprite.Group())
                     player.move(900, 900)
                     player.stop_moving()
-                    
-                    
+
+
                 elif pygame.sprite.collide_rect(portal_level1, player):
                     x, y, num, lvl = 0, 0, 8, 2
                     maze_level1 = Maze()
@@ -602,7 +643,7 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
                          keys=pygame.sprite.Group())
                     player.move(900, 900)
                     player.stop_moving()
-                    
+
                 elif pygame.sprite.collide_rect(portal_level2, player):
                     x, y, num, lvl = 0, 0, 21, 3
                     maze_level2 = Maze()
@@ -612,14 +653,14 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
                          keys=pygame.sprite.Group())
                     player.move(900, 900)
                     player.stop_moving()
-            
+
             bullets_group.update()
             bullets_group.draw(display)
             if not player.level:
                 draw_text('Tutorial level', (255, 255, 255), display, 180, 150)
                 draw_text('First level', (255, 255, 255), display, 840, 150)
                 draw_text('Second level', (255, 255, 255), display, 1460, 150)
-    
+
             if all_keys:
                 for sprite in all_keys:
                     if pygame.sprite.collide_rect(player, sprite):
@@ -628,7 +669,7 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
                         sound = pygame.mixer.Sound('data/sounds/pickup.wav')
                         sound.set_volume(0.07)
                         sound.play()
-                        
+
             for sprite in bullets_group:
                 if pygame.sprite.spritecollideany(sprite, maze):
                     sound = pygame.mixer.Sound('data/sounds/splash.wav')
@@ -641,16 +682,17 @@ def game(screen, maze, player, keys=False): # Функция, реализующ
                             sound.set_volume(0.05)
                             sound.play()
                             wall.kill()
-                    
+
             if draw_crosshair[0]:
                 display.blit(crosshair, (draw_crosshair[1][0],
                                         draw_crosshair[1][1]))
             screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
-            
+
             pygame.display.update()
             clock.tick(60)
         else:
             running = False
+
 
 global RESOLUTION, FPS, resolutions, fps_list
 # Resolutions: 16:9 (1024, 576); (1152, 648); (1280, 720);
