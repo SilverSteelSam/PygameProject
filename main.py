@@ -704,15 +704,32 @@ def race(screen, car):
     crosshair = pygame.image.load('data/crosshair.png')
     crosshair = pygame.transform.rotozoom(crosshair, 0, 2)
 
+    bullets_group = Group_custom_draw()
+
+    # trace = Maze(MazeWall((1000, 500), 100, 100))
+
     clock = pygame.time.Clock()
 
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     back = pause_menu(screen)
+
+            if event.type == pygame.MOUSEMOTION:
+                draw_crosshair = True, ((event.pos[0] * 1920 / RESOLUTION[0] - 30,
+                                         event.pos[1] * 1080 / RESOLUTION[1] - 30))
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                sound = pygame.mixer.Sound('data/sounds/shoot.wav')
+                sound.set_volume(0.1)
+                sound.play()
+                bullets_group.add(Bullet(car.rect.center,
+                                         (event.pos[0] * 1920 / RESOLUTION[0],
+                                          event.pos[1] * 1080 / RESOLUTION[1])))
 
         if pygame.key.get_pressed()[pygame.K_w] or pygame.key.get_pressed()[pygame.K_UP]:
             car.speed_change(1)
@@ -732,12 +749,17 @@ def race(screen, car):
                     pygame.key.get_pressed()[pygame.K_LEFT], pygame.key.get_pressed()[pygame.K_RIGHT]]):
             car.speed_change(0)
 
-        print(car.rect.x, car.rect.y)
-        print(car.spd)
+        display.fill("blue")
 
-        screen.fill("blue")
+        if draw_crosshair[0]:
+            display.blit(crosshair, (draw_crosshair[1][0],
+                                     draw_crosshair[1][1]))
         car.update()
-        car.draw(screen)
+        car.draw(display)
+        bullets_group.update()
+        bullets_group.draw(display)
+
+        screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
         pygame.display.update()
         clock.tick(FPS)
 
