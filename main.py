@@ -1,7 +1,6 @@
 import pygame, sys, os, random
 # from pygame.locals import *
 from itertools import cycle
-from PIL import Image
 from math import sin, cos, pi
 
 global RESOLUTION, FPS, resolutions, fps_list
@@ -119,17 +118,18 @@ class Player(pygame.sprite.Sprite):  # Класс игрока, описываю
 
 class Car(pygame.sprite.Sprite):
     MAX_SPEED = 500 / FPS  # pixels per second
+    BASE_IMAGE = pygame.image.load("data/car.png")
 
     def __init__(self, x, y):
         super().__init__()
-        self.image = load_image("current_car.png")
+        self.image = pygame.image.load("data/car.png").convert_alpha()
 
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
 
         self.spd = 0
-        self.angle = 0
+        self.angle = 180
 
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
@@ -144,12 +144,7 @@ class Car(pygame.sprite.Sprite):
         self.angle += direction * self.spd / 5
 
     def update(self):
-        Image.open("data/car.png").rotate(self.angle).save("data/current_car.png")
-        x, y = self.rect.x, self.rect.y
-        self.image = load_image("current_car.png")
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.image = pygame.transform.rotate(Car.BASE_IMAGE, self.angle)
 
         self.rect.y += self.spd * cos(self.angle * pi / 180)
         self.rect.x += self.spd * sin(self.angle * pi / 180)
