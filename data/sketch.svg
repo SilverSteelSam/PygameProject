@@ -207,9 +207,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.0625"
-     inkscape:cx="3185.3091"
-     inkscape:cy="1217.297"
+     inkscape:zoom="0.125"
+     inkscape:cx="631.96766"
+     inkscape:cy="606.07476"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -977,11 +977,11 @@
        xml:space="preserve"
        id="text2137-4-4-7-7-4"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.33507px;line-height:1.25;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect2139-3-0-5-2-9);fill:#ffffff;fill-opacity:1;stroke:none;"
-       transform="matrix(10.299079,0,0,11.488205,1285.1241,1162.3673)"
-       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\PygameProject\data\menu\fps_btn.png"
-       inkscape:export-xdpi="25.351461"
-       inkscape:export-ydpi="25.351461"><tspan
+       transform="matrix(10.299079,0,0,11.488205,1285.6533,1162.3673)"
+       inkscape:export-filename="C:\Users\Богдан\Desktop\Python 20-21\PygameProject\data\menu\try_btn.png"
+       inkscape:export-xdpi="25.383698"
+       inkscape:export-ydpi="25.383698"><tspan
          x="-85.441406"
-         y="-83.271986"><tspan>Fps:</tspan></tspan></text>
+         y="-83.271986"><tspan>Try again</tspan></tspan></text>
   </g>
 </svg>
