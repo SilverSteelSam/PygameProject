@@ -117,22 +117,22 @@ class Player(pygame.sprite.Sprite):  # Класс игрока, описываю
 
 
 class Car(pygame.sprite.Sprite):
-    MAX_SPEED = 500 / FPS  # pixels per second
-    BASE_IMAGE = pygame.image.load("data/car.png")
+    MAX_SPEED = 400 / FPS  # pixels per second
+    BASE_IMAGE = pygame.transform.scale(pygame.image.load("data/car.png"), (40, 100))
     BASE_W = BASE_IMAGE.get_rect().width
     BASE_H = BASE_IMAGE.get_rect().height
 
-
     def __init__(self, x, y, trace):
         super().__init__()
-        self.image = pygame.image.load("data/car.png").convert_alpha()
+        self.image = Car.BASE_IMAGE.copy()
 
         self.trace = trace
 
         self.x = x
         self.y = y
 
-        self.angle = 0
+        self.angle = 90
+        self.dif_angle = 0
 
         self.dif_x = (sin(self.angle / 180 * pi) * Car.BASE_H + cos(
             self.angle / 180 * pi) * Car.BASE_W) / 2
@@ -155,11 +155,15 @@ class Car(pygame.sprite.Sprite):
             self.spd += direction * Car.MAX_SPEED / 500
 
     def wheeling(self, direction):
-        for wall in self.trace:
-            if pygame.sprite.collide_mask(self, wall):
-                return
+        self.dif_angle = direction * self.spd / 2
 
-        self.angle += direction * self.spd / 5
+    def update(self):
+        origin_image = self.image.copy()
+
+        self.image = pygame.transform.rotate(Car.BASE_IMAGE, self.angle)
+
+        self.angle += self.dif_angle
+
         self.angle %= 360
 
         if 0 <= self.angle < 90:
@@ -186,9 +190,6 @@ class Car(pygame.sprite.Sprite):
             self.dif_y = (sin(self.angle % 270 / 180 * pi) * Car.BASE_H + cos(
                 self.angle % 270 / 180 * pi) * Car.BASE_W) / 2
 
-    def update(self):
-        self.image = pygame.transform.rotate(Car.BASE_IMAGE, self.angle)
-
         self.y += self.spd * cos(self.angle * pi / 180)
         self.x += self.spd * sin(self.angle * pi / 180)
 
@@ -197,10 +198,13 @@ class Car(pygame.sprite.Sprite):
 
         for wall in self.trace:
             if pygame.sprite.collide_mask(self, wall):
+                self.angle -= self.dif_angle
                 self.y -= self.spd * cos(self.angle * pi / 180)
                 self.x -= self.spd * sin(self.angle * pi / 180)
                 self.rect.x = self.x - self.dif_x
                 self.rect.y = self.y - self.dif_y
+
+        self.dif_angle = 0
 
 
 class Key(pygame.sprite.Sprite):
@@ -834,6 +838,24 @@ def race(screen, pos, trace):
 
 
 # main_menu()
-trace = Maze(MazeWall((1000, 500), 100, 100))
+trace = Maze(MazeWall((0, 638), 440, 297, color=1),
+             MazeWall((440, 750), 430, 184, color=1),
+             MazeWall((869, 750), 408, 40, color=1),
+             MazeWall((978, 901), 184, 178, color=1),
+             MazeWall((1278, 750), 41, 245, color=1),
+             MazeWall((1320, 950), 274, 45, color=1),
+             MazeWall((1594, 750), 41, 244, color=1),
+             MazeWall((1421, 582), 72, 274, color=1),
+             MazeWall((1364, 537), 286, 44, color=1),
+             MazeWall((779, 453), 584, 128, color=1),
+             MazeWall((887, 112), 475, 341, color=1),
+             MazeWall((382, 453), 395, 38, color=1),
+             MazeWall((0, 303), 828, 38, color=1),
+             MazeWall((1606, 134), 38, 403, color=1),
+             MazeWall((1473, 0), 38, 403, color=1),
+             MazeWall((1479, 400), 26, 14, color=1),
+             MazeWall((499, 0), 178, 142, color=1),
+             MazeWall((1479, 400), 26, 14, color=1),
+             )
 race(pygame.display.set_mode(RESOLUTION),
-     (0, 0), trace)
+     (80, 1010), trace)
