@@ -155,24 +155,36 @@ class Car(pygame.sprite.Sprite):
             self.spd += direction * Car.MAX_SPEED / 500
 
     def wheeling(self, direction):
+        for wall in self.trace:
+            if pygame.sprite.collide_mask(self, wall):
+                return
+
         self.angle += direction * self.spd / 5
         self.angle %= 360
 
         if 0 <= self.angle < 90:
-            self.dif_x = (sin(self.angle / 180 * pi) * Car.BASE_H + cos(self.angle / 180 * pi) * Car.BASE_W) / 2
-            self.dif_y = (cos(self.angle / 180 * pi) * Car.BASE_H + sin(self.angle / 180 * pi) * Car.BASE_W) / 2
+            self.dif_x = (sin(self.angle / 180 * pi) * Car.BASE_H + cos(
+                self.angle / 180 * pi) * Car.BASE_W) / 2
+            self.dif_y = (cos(self.angle / 180 * pi) * Car.BASE_H + sin(
+                self.angle / 180 * pi) * Car.BASE_W) / 2
 
         if 90 <= self.angle < 180:
-            self.dif_x = (cos(self.angle % 90 / 180 * pi) * Car.BASE_H + sin(self.angle % 90 / 180 * pi) * Car.BASE_W) / 2
-            self.dif_y = (sin(self.angle % 90 / 180 * pi) * Car.BASE_H + cos(self.angle % 90 / 180 * pi) * Car.BASE_W) / 2
+            self.dif_x = (cos(self.angle % 90 / 180 * pi) * Car.BASE_H + sin(
+                self.angle % 90 / 180 * pi) * Car.BASE_W) / 2
+            self.dif_y = (sin(self.angle % 90 / 180 * pi) * Car.BASE_H + cos(
+                self.angle % 90 / 180 * pi) * Car.BASE_W) / 2
 
         if 180 <= self.angle < 270:
-            self.dif_x = (sin(self.angle % 180 / 180 * pi) * Car.BASE_H + cos(self.angle % 180 / 180 * pi) * Car.BASE_W) / 2
-            self.dif_y = (cos(self.angle % 180 / 180 * pi) * Car.BASE_H + sin(self.angle % 180 / 180 * pi) * Car.BASE_W) / 2
+            self.dif_x = (sin(self.angle % 180 / 180 * pi) * Car.BASE_H + cos(
+                self.angle % 180 / 180 * pi) * Car.BASE_W) / 2
+            self.dif_y = (cos(self.angle % 180 / 180 * pi) * Car.BASE_H + sin(
+                self.angle % 180 / 180 * pi) * Car.BASE_W) / 2
 
         if 270 <= self.angle < 360:
-            self.dif_x = (cos(self.angle % 270 / 180 * pi) * Car.BASE_H + sin(self.angle % 270 / 180 * pi) * Car.BASE_W) / 2
-            self.dif_y = (sin(self.angle % 270 / 180 * pi) * Car.BASE_H + cos(self.angle % 270 / 180 * pi) * Car.BASE_W) / 2
+            self.dif_x = (cos(self.angle % 270 / 180 * pi) * Car.BASE_H + sin(
+                self.angle % 270 / 180 * pi) * Car.BASE_W) / 2
+            self.dif_y = (sin(self.angle % 270 / 180 * pi) * Car.BASE_H + cos(
+                self.angle % 270 / 180 * pi) * Car.BASE_W) / 2
 
     def update(self):
         self.image = pygame.transform.rotate(Car.BASE_IMAGE, self.angle)
@@ -182,6 +194,13 @@ class Car(pygame.sprite.Sprite):
 
         self.rect.x = self.x - self.dif_x
         self.rect.y = self.y - self.dif_y
+
+        for wall in self.trace:
+            if pygame.sprite.collide_mask(self, wall):
+                self.y -= self.spd * cos(self.angle * pi / 180)
+                self.x -= self.spd * sin(self.angle * pi / 180)
+                self.rect.x = self.x - self.dif_x
+                self.rect.y = self.y - self.dif_y
 
 
 class Key(pygame.sprite.Sprite):
@@ -279,6 +298,7 @@ class MazeWall(pygame.sprite.Sprite):
     def __init__(self, pos1, width, height, color=0, isfire=False):
         super().__init__()
         self.rect = pygame.Rect(pos1[0], pos1[1], width, height)
+        self.image = pygame.surface.Surface((width, height))
         self.color = color
         self.isfire = isfire
 
@@ -734,15 +754,14 @@ def race(screen, pos, trace):
     pygame.mouse.set_visible(False)
 
     screen = pygame.display.set_mode(RESOLUTION)
-    screen.fill("blue")
+    fon = pygame.image.load("data/trace.jpg")
+    display.blit(fon, (0, 0))
 
     draw_crosshair = False, 0
     crosshair = pygame.image.load('data/crosshair.png')
     crosshair = pygame.transform.rotozoom(crosshair, 0, 2)
 
     bullets_group = Group_custom_draw()
-
-    # trace = Maze(MazeWall((1000, 500), 100, 100))
 
     clock = pygame.time.Clock()
 
@@ -785,7 +804,7 @@ def race(screen, pos, trace):
                     pygame.key.get_pressed()[pygame.K_LEFT], pygame.key.get_pressed()[pygame.K_RIGHT]]):
             car.speed_change(0)
 
-        display.fill("blue")
+        display.blit(fon, (0, 0))
 
         if draw_crosshair[0]:
             display.blit(crosshair, (draw_crosshair[1][0],
@@ -794,6 +813,20 @@ def race(screen, pos, trace):
         car.draw(display)
         bullets_group.update()
         bullets_group.draw(display)
+        trace.draw(display)
+
+        for sprite in bullets_group:
+            if pygame.sprite.spritecollideany(sprite, trace):
+                sound = pygame.mixer.Sound('data/sounds/splash.wav')
+                sound.set_volume(0.05)
+                sound.play()
+                bullets_group.remove(sprite)
+                for wall in pygame.sprite.spritecollide(sprite, trace, dokill=False):
+                    if wall.isfire:
+                        sound = pygame.mixer.Sound('data/sounds/fire_extinguish.wav')
+                        sound.set_volume(0.05)
+                        sound.play()
+                        wall.kill()
 
         screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
         pygame.display.update()
@@ -801,6 +834,6 @@ def race(screen, pos, trace):
 
 
 # main_menu()
-trace = Maze()
+trace = Maze(MazeWall((1000, 500), 100, 100))
 race(pygame.display.set_mode(RESOLUTION),
      (0, 0), trace)
