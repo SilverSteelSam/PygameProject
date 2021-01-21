@@ -119,17 +119,31 @@ class Player(pygame.sprite.Sprite):  # Класс игрока, описываю
 class Car(pygame.sprite.Sprite):
     MAX_SPEED = 500 / FPS  # pixels per second
     BASE_IMAGE = pygame.image.load("data/car.png")
+    BASE_W = BASE_IMAGE.get_rect().width
+    BASE_H = BASE_IMAGE.get_rect().height
 
-    def __init__(self, x, y):
+
+    def __init__(self, x, y, trace):
         super().__init__()
         self.image = pygame.image.load("data/car.png").convert_alpha()
+
+        self.trace = trace
+
+        self.x = x
+        self.y = y
+
+        self.angle = 0
+
+        self.dif_x = (sin(self.angle / 180 * pi) * Car.BASE_H + cos(
+            self.angle / 180 * pi) * Car.BASE_W) / 2
+        self.dif_y = (cos(self.angle / 180 * pi) * Car.BASE_H + sin(
+            self.angle / 180 * pi) * Car.BASE_W) / 2
 
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
 
         self.spd = 0
-        self.angle = 180
 
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
@@ -142,12 +156,32 @@ class Car(pygame.sprite.Sprite):
 
     def wheeling(self, direction):
         self.angle += direction * self.spd / 5
+        self.angle %= 360
+
+        if 0 <= self.angle < 90:
+            self.dif_x = (sin(self.angle / 180 * pi) * Car.BASE_H + cos(self.angle / 180 * pi) * Car.BASE_W) / 2
+            self.dif_y = (cos(self.angle / 180 * pi) * Car.BASE_H + sin(self.angle / 180 * pi) * Car.BASE_W) / 2
+
+        if 90 <= self.angle < 180:
+            self.dif_x = (cos(self.angle % 90 / 180 * pi) * Car.BASE_H + sin(self.angle % 90 / 180 * pi) * Car.BASE_W) / 2
+            self.dif_y = (sin(self.angle % 90 / 180 * pi) * Car.BASE_H + cos(self.angle % 90 / 180 * pi) * Car.BASE_W) / 2
+
+        if 180 <= self.angle < 270:
+            self.dif_x = (sin(self.angle % 180 / 180 * pi) * Car.BASE_H + cos(self.angle % 180 / 180 * pi) * Car.BASE_W) / 2
+            self.dif_y = (cos(self.angle % 180 / 180 * pi) * Car.BASE_H + sin(self.angle % 180 / 180 * pi) * Car.BASE_W) / 2
+
+        if 270 <= self.angle < 360:
+            self.dif_x = (cos(self.angle % 270 / 180 * pi) * Car.BASE_H + sin(self.angle % 270 / 180 * pi) * Car.BASE_W) / 2
+            self.dif_y = (sin(self.angle % 270 / 180 * pi) * Car.BASE_H + cos(self.angle % 270 / 180 * pi) * Car.BASE_W) / 2
 
     def update(self):
         self.image = pygame.transform.rotate(Car.BASE_IMAGE, self.angle)
 
-        self.rect.y += self.spd * cos(self.angle * pi / 180)
-        self.rect.x += self.spd * sin(self.angle * pi / 180)
+        self.y += self.spd * cos(self.angle * pi / 180)
+        self.x += self.spd * sin(self.angle * pi / 180)
+
+        self.rect.x = self.x - self.dif_x
+        self.rect.y = self.y - self.dif_y
 
 
 class Key(pygame.sprite.Sprite):
@@ -688,10 +722,12 @@ def game(screen, maze, player, keys=False):  # Функция, реализую�
             running = False
 
 
-def race(screen, car):
+def race(screen, pos, trace):
     pygame.init()
 
     display = pygame.Surface((1920, 1080))
+
+    car = Car(*pos, trace)
 
     back = True
     running = True
@@ -765,5 +801,6 @@ def race(screen, car):
 
 
 # main_menu()
+trace = Maze()
 race(pygame.display.set_mode(RESOLUTION),
-     Car(0, 0))
+     (0, 0), trace)
