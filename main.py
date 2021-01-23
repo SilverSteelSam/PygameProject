@@ -224,6 +224,41 @@ class Portal(pygame.sprite.Sprite):
         self.lvl = lvl
 
 
+class StartLine(pygame.sprite.Sprite):
+    def __init__(self, rect):
+        super().__init__()
+        self.rect = rect
+        self.image = pygame.surface.Surface((self.rect.w, self.rect.h))
+        self.image.fill(pygame.Color("yellow"))
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+
+class Timer:
+    def __init__(self, text_pos):
+        self.pos = text_pos
+        self.running = False
+        self.current_time = 0
+
+    def start(self):
+        self.start_time = pygame.time.get_ticks()
+        self.running = True
+
+    def stop(self):
+        self.running = False
+        self.current_time = 0
+
+    def update(self):
+        if self.running:
+            self.current_time = pygame.time.get_ticks() - self.start_time
+
+    def draw(self, screen):
+        font = pygame.font.Font
+        draw_text(f"Time: {self.current_time}", pygame.Color("white"), screen,
+                  *self.pos)
+
+
 class Key(pygame.sprite.Sprite):
     def __init__(self, x, y, color):
         super().__init__()
@@ -379,6 +414,10 @@ def draw_text(text, color, surface, x, y, font=0):  # Функция для от
     text_rect = text_obj.get_rect()
     text_rect.topleft = (x, y)
     surface.blit(text_obj, text_rect)
+
+
+def time_to_score(time, lvl):
+    return time
 
 
 def main_menu():  # -----------------MAIN MENU FUNCTION------------------------
@@ -769,12 +808,14 @@ def race(screen, pos, trace):
     display = pygame.Surface((1920, 1080))
 
     car = Car(*pos, trace)
-
     portals = pygame.sprite.Group(
         Portal(455, 942, 3, 1),
         Portal(769, 376, 8, 2),
         Portal(47, 179, 21, 3)
     )
+    bullets_group = Group_custom_draw()
+    startline = StartLine(pygame.Rect(567, 935, 20, 1080 - 935))
+    timer = Timer((0, 950))
 
     back = True
     running = True
@@ -787,8 +828,6 @@ def race(screen, pos, trace):
     draw_crosshair = False, 0
     crosshair = pygame.image.load('data/crosshair.png')
     crosshair = pygame.transform.rotozoom(crosshair, 0, 2)
-
-    bullets_group = Group_custom_draw()
 
     clock = pygame.time.Clock()
 
@@ -837,11 +876,15 @@ def race(screen, pos, trace):
             display.blit(crosshair, (draw_crosshair[1][0],
                                      draw_crosshair[1][1]))
         car.update()
-        car.draw(display)
         bullets_group.update()
+        timer.update()
+
         bullets_group.draw(display)
         trace.draw(display)
         portals.draw(display)
+        startline.draw(display)
+        car.draw(display)
+        timer.draw(display)
 
         for sprite in bullets_group:
             if pygame.sprite.spritecollideany(sprite, trace):
@@ -858,6 +901,24 @@ def race(screen, pos, trace):
 
         for portal in portals:
             if pygame.sprite.collide_mask(portal, car):
+                pygame.draw.rect(display, pygame.Color((61, 107, 214)),
+                                 pygame.Rect(1920 / 4, 1080 / 4, 1920 / 2, 1080 / 2))
+                display.blit(pygame.image.load("data/icon_hr.png"), (1920 / 4 + 10, 1080 / 4 + 10))
+                draw_text(f"Time: {timer.current_time}", pygame.Color("white"), display,
+                          1920 / 4 + 10, 1080 / 4 + 235)
+                draw_text(f"Score: {time_to_score(timer.current_time, portal.lvl)}",
+                          pygame.Color("white"), display, 1920 / 4 + 10, 1080 / 4 + 295)
+
+                screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
+                pygame.display.update()
+                timer.stop()
+                ready = False
+
+                while not ready:
+                    for event in pygame.event.get():
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            ready = True
+
                 x, y, num, lvl = 0, 0, portal.num, portal.lvl
                 maze_level = Maze()
                 game(screen,
@@ -865,6 +926,9 @@ def race(screen, pos, trace):
                      Player(x, y, num_of_shoots=num, level=lvl),
                      keys=pygame.sprite.Group())
                 car.set_pos(pos)
+
+        if pygame.sprite.collide_rect(car, startline):
+            timer.start()
 
         screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
         pygame.display.update()
