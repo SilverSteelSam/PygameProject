@@ -206,6 +206,23 @@ class Car(pygame.sprite.Sprite):
 
         self.dif_angle = 0
 
+    def set_pos(self, pos):
+        self.x, self.y = pos
+        self.dif_angle = -1 * self.angle + 90
+        self.update()
+
+
+class Portal(pygame.sprite.Sprite):
+    def __init__(self, x, y, num, lvl):
+        super().__init__()
+        self.image = pygame.surface.Surface((40, 40))
+        self.image.set_colorkey((0, 0, 0))
+        pygame.draw.circle(self.image, pygame.Color("white"), (20, 20), 20)
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = x, y
+        self.num = num
+        self.lvl = lvl
+
 
 class Key(pygame.sprite.Sprite):
     def __init__(self, x, y, color):
@@ -753,6 +770,12 @@ def race(screen, pos, trace):
 
     car = Car(*pos, trace)
 
+    portals = pygame.sprite.Group(
+        Portal(455, 942, 3, 1),
+        Portal(769, 376, 8, 2),
+        Portal(47, 179, 21, 3)
+    )
+
     back = True
     running = True
     pygame.mouse.set_visible(False)
@@ -818,6 +841,7 @@ def race(screen, pos, trace):
         bullets_group.update()
         bullets_group.draw(display)
         trace.draw(display)
+        portals.draw(display)
 
         for sprite in bullets_group:
             if pygame.sprite.spritecollideany(sprite, trace):
@@ -831,6 +855,16 @@ def race(screen, pos, trace):
                         sound.set_volume(0.05)
                         sound.play()
                         wall.kill()
+
+        for portal in portals:
+            if pygame.sprite.collide_mask(portal, car):
+                x, y, num, lvl = 0, 0, portal.num, portal.lvl
+                maze_level = Maze()
+                game(screen,
+                     maze_level,
+                     Player(x, y, num_of_shoots=num, level=lvl),
+                     keys=pygame.sprite.Group())
+                car.set_pos(pos)
 
         screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
         pygame.display.update()
