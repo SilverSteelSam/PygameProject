@@ -11,6 +11,7 @@ FPS = 60
 resolutions = cycle([(1024, 576), (1152, 648), (1280, 720),
                      (1366, 768), (1600, 900), (1920, 1080)])
 fps_list = cycle([30, 60, 120])
+SCORE = [0, 0, 0]
 
 
 class Player(pygame.sprite.Sprite):  # Класс игрока, описывающий функционал персонажа
@@ -408,8 +409,8 @@ def load_image(name, colorkey=None):
     return image
 
 
-def draw_text(text, color, surface, x, y, font=0):  # Функция для отрисовки текста
-    font = pygame.font.Font(None, 50)
+def draw_text(text, color, surface, x, y, font=50):  # Функция для отрисовки текста
+    font = pygame.font.Font(None, font)
     text_obj = font.render(text, True, color)
     text_rect = text_obj.get_rect()
     text_rect.topleft = (x, y)
@@ -417,7 +418,31 @@ def draw_text(text, color, surface, x, y, font=0):  # Функция для от
 
 
 def time_to_score(time, lvl):
-    return time
+    if lvl == 1:
+        return 0
+    return min(60000 - time, 30000)
+
+
+def score_menu(screen, time, score, lvl):
+    SCORE[lvl - 1] = max(SCORE[lvl - 1], time_to_score(time, lvl))
+    display = pygame.Surface((1920, 1080))
+    fon = pygame.image.load("data/menu/score_menu.png")
+    display.blit(fon, (0, 0))
+    draw_text(str(time), pygame.Color("white"), display, 1075, 455, font=75)
+    draw_text(str(score), pygame.Color("white"), display, 1075, 545, font=75)
+    draw_text(str(SCORE[lvl - 1]), pygame.Color("white"), display, 1075, 640, font=75)
+    draw_text(str(sum(SCORE)), pygame.Color("white"), display, 1075, 730, font=75)
+    screen.blit(pygame.transform.scale(display, (RESOLUTION[0] // 2, RESOLUTION[1] // 2)),
+                (RESOLUTION[0] // 4, RESOLUTION[1] // 4))
+    # screen.blit(display, (0, 0))
+    pygame.display.update()
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                running = False
 
 
 def main_menu():  # -----------------MAIN MENU FUNCTION------------------------
@@ -821,7 +846,6 @@ def race(screen, pos, trace):
     running = True
     pygame.mouse.set_visible(False)
 
-    screen = pygame.display.set_mode(RESOLUTION)
     fon = pygame.image.load("data/trace.jpg")
     display.blit(fon, (0, 0))
 
@@ -867,7 +891,8 @@ def race(screen, pos, trace):
         if not any([pygame.key.get_pressed()[pygame.K_w], pygame.key.get_pressed()[pygame.K_s],
                     pygame.key.get_pressed()[pygame.K_a], pygame.key.get_pressed()[pygame.K_d],
                     pygame.key.get_pressed()[pygame.K_UP], pygame.key.get_pressed()[pygame.K_DOWN],
-                    pygame.key.get_pressed()[pygame.K_LEFT], pygame.key.get_pressed()[pygame.K_RIGHT]]):
+                    pygame.key.get_pressed()[pygame.K_LEFT],
+                    pygame.key.get_pressed()[pygame.K_RIGHT]]):
             car.speed_change(0)
 
         display.blit(fon, (0, 0))
@@ -901,16 +926,8 @@ def race(screen, pos, trace):
 
         for portal in portals:
             if pygame.sprite.collide_mask(portal, car):
-                pygame.draw.rect(display, pygame.Color((61, 107, 214)),
-                                 pygame.Rect(1920 / 4, 1080 / 4, 1920 / 2, 1080 / 2))
-                display.blit(pygame.image.load("data/icon_hr.png"), (1920 / 4 + 10, 1080 / 4 + 10))
-                draw_text(f"Time: {timer.current_time}", pygame.Color("white"), display,
-                          1920 / 4 + 10, 1080 / 4 + 235)
-                draw_text(f"Score: {time_to_score(timer.current_time, portal.lvl)}",
-                          pygame.Color("white"), display, 1920 / 4 + 10, 1080 / 4 + 295)
-
-                screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
-                pygame.display.update()
+                score_menu(screen, timer.current_time, time_to_score(timer.current_time,
+                                                                     portal.lvl), portal.lvl)
                 timer.stop()
                 ready = False
 
