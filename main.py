@@ -236,6 +236,23 @@ class StartLine(pygame.sprite.Sprite):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
 
+class House(pygame.sprite.Sprite):
+    def __init__(self, x, y, width, height, completed=False):
+        super().__init__()
+        self.image = pygame.Surface((width, height))
+        pygame.draw.polygon(self.image, pygame.Color((229, 239, 193)),
+                            ((0, 0), (width, height), (width, 0)))
+        pygame.draw.polygon(self.image, pygame.Color((199, 200, 169)),
+                            ((0, 0), (width, height), (0, height)))
+        pygame.draw.rect(self.image, pygame.Color((97, 97, 97)), pygame.Rect(0, 0, width, height),
+                         width=8)
+        pygame.draw.line(self.image, pygame.Color((97, 97, 97)), (0, 0), (width, height), width=8)
+
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+
 class Timer:
     def __init__(self, text_pos):
         self.pos = text_pos
@@ -839,6 +856,9 @@ def race(screen, pos, trace):
         Portal(47, 179, 21, 3)
     )
     bullets_group = Group_custom_draw()
+    houses = pygame.sprite.Group(House(421, 767, 194, 150),
+                                 House(829, 303, 175, 158),
+                                 House(0, 5, 175, 157))
     startline = StartLine(pygame.Rect(567, 935, 20, 1080 - 935))
     timer = Timer((0, 950))
 
@@ -904,6 +924,7 @@ def race(screen, pos, trace):
         bullets_group.update()
         timer.update()
 
+        houses.draw(display)
         bullets_group.draw(display)
         trace.draw(display)
         portals.draw(display)
@@ -971,6 +992,9 @@ trace = Maze(MazeWall((0, 638), 440, 297, color=1),
              MazeWall((1479, 400), 26, 14, color=1),
              MazeWall((499, 0), 178, 142, color=1),
              MazeWall((1479, 400), 26, 14, color=1),
+             MazeWall((421, 767), 194, 150, color=1),
+             MazeWall((829, 303), 175, 158, color=1),
+             MazeWall((0, 5), 175, 157, color=1)
              )
 race(pygame.display.set_mode(RESOLUTION),
      (80, 1010), trace)
