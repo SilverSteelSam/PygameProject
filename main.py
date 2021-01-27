@@ -12,6 +12,7 @@ resolutions = cycle([(1024, 576), (1152, 648), (1280, 720),
                      (1366, 768), (1600, 900), (1920, 1080)])
 fps_list = cycle([30, 60, 120])
 SCORE = [0, 0, 0]
+CHOKED_FIRE = []
 
 
 class Player(pygame.sprite.Sprite):  # Класс игрока, описывающий функционал персонажа
@@ -917,9 +918,6 @@ def race(screen, pos, trace):
 
         display.blit(fon, (0, 0))
 
-        if draw_crosshair[0]:
-            display.blit(crosshair, (draw_crosshair[1][0],
-                                     draw_crosshair[1][1]))
         car.update()
         bullets_group.update()
         timer.update()
@@ -931,6 +929,9 @@ def race(screen, pos, trace):
         startline.draw(display)
         car.draw(display)
         timer.draw(display)
+        if draw_crosshair[0]:
+            display.blit(crosshair, (draw_crosshair[1][0],
+                                     draw_crosshair[1][1]))
 
         for sprite in bullets_group:
             if pygame.sprite.spritecollideany(sprite, trace):
@@ -943,6 +944,7 @@ def race(screen, pos, trace):
                         sound = pygame.mixer.Sound('data/sounds/fire_extinguish.wav')
                         sound.set_volume(0.05)
                         sound.play()
+                        CHOKED_FIRE.append(wall)
                         wall.kill()
 
         for portal in portals:
@@ -964,6 +966,8 @@ def race(screen, pos, trace):
                      Player(x, y, num_of_shoots=num, level=lvl),
                      keys=pygame.sprite.Group())
                 car.set_pos(pos)
+                while CHOKED_FIRE:
+                    trace.add(CHOKED_FIRE.pop())
 
         if pygame.sprite.collide_rect(car, startline):
             timer.start()
@@ -994,7 +998,23 @@ trace = Maze(MazeWall((0, 638), 440, 297, color=1),
              MazeWall((1479, 400), 26, 14, color=1),
              MazeWall((421, 767), 194, 150, color=1),
              MazeWall((829, 303), 175, 158, color=1),
-             MazeWall((0, 5), 175, 157, color=1)
+             MazeWall((0, 5), 175, 157, color=1),
+
+             MazeWall((436, 111), 77, 77, isfire=True),
+             MazeWall((631, 118), 52, 52, isfire=True),
+             MazeWall((812, 225), 85, 85, isfire=True),
+             MazeWall((975, 74), 77, 77, isfire=True),
+             MazeWall((1336, 72), 64, 64, isfire=True),
+             MazeWall((1335, 354), 59, 59, isfire=True),
+             MazeWall((743, 526), 84, 84, isfire=True),
+             MazeWall((1010, 550), 51, 51, isfire=True),
+             MazeWall((1178, 544), 89, 89, isfire=True),
+             MazeWall((1388, 491), 128, 128, isfire=True),
+             MazeWall((650, 909), 37, 37, isfire=True),
+             MazeWall((834, 828), 50, 50, isfire=True),
+             MazeWall((1066, 870), 45, 45, isfire=True),
+             MazeWall((1255, 821), 44, 44, isfire=True),
+             MazeWall((1402, 830), 51, 51, isfire=True)
              )
 race(pygame.display.set_mode(RESOLUTION),
      (80, 1010), trace)
