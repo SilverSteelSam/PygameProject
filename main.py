@@ -8,7 +8,6 @@ global RESOLUTION, FPS, resolutions, fps_list, issound
 #from pygame.locals import *
 from math import sin, cos, pi
 
-global RESOLUTION, FPS, resolutions, fps_list
 # Resolutions: 16:9 (1024, 576); (1152, 648); (1280, 720);
 #                   (1366, 768); (1600, 900); (1920, 1080)
 RESOLUTION = (1920, 1080)
@@ -282,6 +281,10 @@ class Timer:
         self.pos = text_pos
         self.running = False
         self.current_time = 0
+        self.pausing = False
+        self.pause_start_time = 0
+        self.all_pause_time = 0
+        self.bonus_time = 0
 
     def start(self):
         self.start_time = pygame.time.get_ticks()
@@ -291,9 +294,19 @@ class Timer:
         self.running = False
         self.current_time = 0
 
+    def pause(self):
+        if self.running:
+            self.pausing = True
+            self.pause_start_time = pygame.time.get_ticks()
+
+    def _continue(self):
+        if self.pausing:
+            self.pausing = False
+            self.all_pause_time += pygame.time.get_ticks() - self.pause_start_time
+
     def update(self):
         if self.running:
-            self.current_time = pygame.time.get_ticks() - self.start_time
+            self.current_time = pygame.time.get_ticks() - self.start_time - self.all_pause_time - self.bonus_time
 
     def draw(self, screen):
         font = pygame.font.Font
@@ -568,6 +581,7 @@ def main_menu():  # -----------------MAIN MENU FUNCTION------------------------
         pygame.display.update()
         clock.tick(FPS)
 
+
 def options_menu(screen): # Функция, реализующая меню настроек
     global FPS, RESOLUTION, resolutions, fps_list
     display = pygame.Surface((1920, 1080))
@@ -791,7 +805,7 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
     print(portal_crds != None)
 
 
-    all_keys = keys    
+    all_keys = keys
     
     draw_crosshair = False, 0
     crosshair = pygame.image.load('data/crosshair.png')
@@ -1025,7 +1039,9 @@ def race(screen, pos, trace):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    back = pause_menu(screen)
+                    timer.pause()
+                    back = pause_menu(screen, islevelmenu=False)
+                    timer._continue()
 
             if event.type == pygame.MOUSEMOTION:
                 draw_crosshair = True, ((event.pos[0] * 1920 / RESOLUTION[0] - 30,
@@ -1087,6 +1103,7 @@ def race(screen, pos, trace):
                         sound.set_volume(0.05)
                         sound.play()
                         CHOKED_FIRE.append(wall)
+                        timer.bonus_time += 1000
                         wall.kill()
 
         for portal in portals:
@@ -1103,7 +1120,7 @@ def race(screen, pos, trace):
 
                 x, y, num, lvl = 0, 0, portal.num, portal.lvl
                 maze_level = Maze()
-                game(screen,
+                labyrinth_game(screen,
                      maze_level,
                      Player(x, y, num_of_shoots=num, level=lvl),
                      keys=pygame.sprite.Group())
@@ -1158,7 +1175,8 @@ trace = Maze(MazeWall((0, 638), 440, 297, color=1),
              MazeWall((1255, 821), 44, 44, isfire=True),
              MazeWall((1402, 830), 51, 51, isfire=True)
              )
+
 race(pygame.display.set_mode(RESOLUTION),
      (80, 1010), trace)
 
-main_menu()
+# main_menu()
