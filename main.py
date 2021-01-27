@@ -414,7 +414,7 @@ class MazeWall(pygame.sprite.Sprite):
         
     def draw(self, screen):
         if self.isfire:
-            surface=  pygame.transform.scale(pygame.image.load('data/fire1.png'), (212, 212))
+            surface = pygame.transform.scale(pygame.image.load('data/fire1.png'), (self.rect.w, self.rect.h))
             screen.blit(surface, self.rect)
         else:
             if not self.color:
@@ -1159,21 +1159,21 @@ trace = Maze(MazeWall((0, 638), 440, 297, color=1),
              MazeWall((829, 303), 175, 158, color=1),
              MazeWall((0, 5), 175, 157, color=1),
 
-             MazeWall((436, 111), 77, 77, isfire=True),
-             MazeWall((631, 118), 52, 52, isfire=True),
-             MazeWall((812, 225), 85, 85, isfire=True),
-             MazeWall((975, 74), 77, 77, isfire=True),
-             MazeWall((1336, 72), 64, 64, isfire=True),
-             MazeWall((1335, 354), 59, 59, isfire=True),
-             MazeWall((743, 526), 84, 84, isfire=True),
-             MazeWall((1010, 550), 51, 51, isfire=True),
-             MazeWall((1178, 544), 89, 89, isfire=True),
-             MazeWall((1388, 491), 128, 128, isfire=True),
-             MazeWall((650, 909), 37, 37, isfire=True),
-             MazeWall((834, 828), 50, 50, isfire=True),
-             MazeWall((1066, 870), 45, 45, isfire=True),
-             MazeWall((1255, 821), 44, 44, isfire=True),
-             MazeWall((1402, 830), 51, 51, isfire=True)
+             MazeWall((436, 111), 97, 97, isfire=True),
+             MazeWall((631, 118), 72, 72, isfire=True),
+             MazeWall((812, 225), 105, 105, isfire=True),
+             MazeWall((975, 74), 97, 97, isfire=True),
+             MazeWall((1336, 72), 84, 84, isfire=True),
+             MazeWall((1335, 354), 79, 79, isfire=True),
+             MazeWall((743, 526), 104, 104, isfire=True),
+             MazeWall((1010, 550), 71, 71, isfire=True),
+             MazeWall((1178, 544), 109, 109, isfire=True),
+             MazeWall((1388, 491), 148, 148, isfire=True),
+             MazeWall((650, 909), 57, 57, isfire=True),
+             MazeWall((834, 828), 70, 70, isfire=True),
+             MazeWall((1066, 870), 65, 65, isfire=True),
+             MazeWall((1255, 821), 64, 64, isfire=True),
+             MazeWall((1402, 830), 71, 71, isfire=True)
              )
 
 race(pygame.display.set_mode(RESOLUTION),
