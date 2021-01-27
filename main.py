@@ -723,6 +723,7 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
                     
                 elif pygame.sprite.collide_rect(portal_level2, player):
                     x, y, num, lvl = 0, 0, 8, 2
+                    w, h = 170, 175
                     maze_level2 = Maze()
                     labyrinth_game(screen,
                          maze_level2,
@@ -733,6 +734,7 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
                     
                 elif pygame.sprite.collide_rect(portal_level3, player):
                     x, y, num, lvl = 0, 0, 21, 3
+                    w, h = 145, 150
                     maze_level3 = Maze()
                     labyrinth_game(screen,
                          maze_level3,
