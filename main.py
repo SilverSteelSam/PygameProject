@@ -1,6 +1,6 @@
 import pygame, sys, os, random
 from itertools import cycle
-global RESOLUTION, FPS, resolutions, fps_list, issound
+global RESOLUTION, FPS, resolutions, fps_list, issound, levels_completed
 # Resolutions: 16:9 (1024, 576); (1152, 648); (1280, 720);
 #                   (1366, 768); (1600, 900); (1920, 1080)
 RESOLUTION = (1920, 1080)
@@ -9,6 +9,7 @@ resolutions = cycle([(1024, 576), (1152, 648), (1280, 720),
                (1366, 768), (1600, 900), (1920, 1080)][::-1])
 fps_list = cycle([120, 15, 30, 60])
 issound = True
+levels_completed = []
 #from pygame.locals import *
 
 class Player(pygame.sprite.Sprite): # Класс игрока, описывающий функционал персонажа
@@ -41,7 +42,7 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
             
     def do_backup(self):
         self.rect.x, self.rect.y, self.num_of_shoots = self.backup
-        
+        self.keys = []
               
     def move(self, x, y):
         self.rect.x = x
@@ -549,9 +550,10 @@ def pause_menu(screen, islevelmenu): # Функция, реализующая м
 
 def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Функция, реализующая саму игру
 
-    global FPS, RESOLUTION
+    global FPS, RESOLUTION, levels_completed
     display = pygame.Surface((1920, 1080))
     try_again = False
+
     
     back = True
     
@@ -596,10 +598,11 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
         portal.rect = surface.get_rect()
         portal.rect.x = portal_crds[0]
         portal.rect.y = portal_crds[1]
-    print(portal_crds != None)
-        
+    # print(portal_crds != None)
     
-    all_keys = keys    
+    if keys:
+        keys_backup = keys.copy()
+    all_keys = keys
     
     draw_crosshair = False, 0
     crosshair = pygame.image.load('data/crosshair.png')
@@ -655,10 +658,12 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
                                              event.pos[1] * 1080 / RESOLUTION[1])))
         
         if try_again:
+            bullets_group.empty()    
             player.do_backup()
             maze.do_backup()
             try_again = False
-                
+            all_keys = keys_backup.copy()
+            
 
         if back:
             display.fill((132, 175, 156))
@@ -707,7 +712,7 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
                                         MazeWall((237 + w * 2, 30 + w * 3), 212, 212, isfire=True),
                                         MazeWall((237 + w, 30 + w * 2), 212, 212, isfire=True),
                                         MazeWall((207  + w * 7, 35 + w * 3), 212, 212, isfire=True))
-                    player.levels.append(labyrinth_game(screen,
+                    levels_completed.append(labyrinth_game(screen,
                          maze_level1,
                          Player(x, y, num_of_shoots=num, level=lvl),
                          keys=pygame.sprite.Group(Key(100 + w * 2, 100, 'yellow')),
@@ -746,15 +751,15 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
             bullets_group.update()
             bullets_group.draw(display)
             if not player.level:
-                if 1 in player.levels:
+                if 1 in levels_completed:
                     draw_text('First level: Completed', (255, 255, 255), display, 120, 150)
                 else:
                     draw_text('First level: Not completed', (255, 255, 255), display, 120, 150)
-                if 2 in player.levels:
+                if 2 in levels_completed:
                     draw_text('Second level: Completed', (255, 255, 255), display, 710, 150)
                 else:
                     draw_text('Second level: Not completed', (255, 255, 255), display, 700, 150)
-                if 3 in player.levels:
+                if 3 in levels_completed:
                     draw_text('Third level: Completed', (255, 255, 255), display, 1385, 150)
                 else:
                     draw_text('Third level: Not completed', (255, 255, 255), display, 1385, 150)
@@ -793,6 +798,5 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
             clock.tick(FPS)
         else:
             running = False
-
 
 main_menu()
