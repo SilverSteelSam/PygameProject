@@ -468,8 +468,8 @@ def load_image(name, colorkey=None):
     return image
 
 
-def draw_text(text, color, surface, x, y, font=50):  # Функция для отрисовки текста
-    font = pygame.font.Font(None, font)
+def draw_text(text, color, surface, x, y, size=50):  # Функция для отрисовки текста
+    font = pygame.font.Font(None, size)
     text_obj = font.render(text, True, color)
     text_rect = text_obj.get_rect()
     text_rect.topleft = (x, y)
@@ -487,10 +487,10 @@ def score_menu(screen, time, score, lvl):
     display = pygame.Surface((1920, 1080))
     fon = pygame.image.load("data/menu/score_menu.png")
     display.blit(fon, (0, 0))
-    draw_text(str(time), pygame.Color("white"), display, 1075, 455, font=75)
-    draw_text(str(score), pygame.Color("white"), display, 1075, 545, font=75)
-    draw_text(str(SCORE[lvl - 1]), pygame.Color("white"), display, 1075, 640, font=75)
-    draw_text(str(sum(SCORE)), pygame.Color("white"), display, 1075, 730, font=75)
+    draw_text(str(time), pygame.Color("white"), display, 1075, 455, size=75)
+    draw_text(str(score), pygame.Color("white"), display, 1075, 545, size=75)
+    draw_text(str(SCORE[lvl - 1]), pygame.Color("white"), display, 1075, 640, size=75)
+    draw_text(str(sum(SCORE)), pygame.Color("white"), display, 1075, 730, size=75)
     screen.blit(pygame.transform.scale(display, (RESOLUTION[0] // 2, RESOLUTION[1] // 2)),
                 (RESOLUTION[0] // 4, RESOLUTION[1] // 4))
     # screen.blit(display, (0, 0))
@@ -550,13 +550,16 @@ def main_menu():  # -----------------MAIN MENU FUNCTION------------------------
             
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if draw == 1:
-                    labyrinth_game(screen,
-                         Maze(MazeWall((0, -1), 1920, 1),
-                              MazeWall((1920, 0), 1, 1080),
-                              MazeWall((0, 1080), 1920, 1),
-                              MazeWall((0, -1), 1, 1080)),
-                         Player(900, 900, num_of_shoots=-1))
-                    
+                    # labyrinth_game(screen,
+                    #      Maze(MazeWall((0, -1), 1920, 1),
+                    #           MazeWall((1920, 0), 1, 1080),
+                    #           MazeWall((0, 1080), 1920, 1),
+                    #           MazeWall((0, -1), 1, 1080)),
+                    #      Player(900, 900, num_of_shoots=-1))
+
+                    race(pygame.display.set_mode(RESOLUTION),
+                         (80, 1010), trace)
+
                     pygame.mouse.set_visible(True)
                 elif draw == 2:
                     options_menu(screen)
@@ -1118,12 +1121,48 @@ def race(screen, pos, trace):
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             ready = True
 
-                x, y, num, lvl = 0, 0, portal.num, portal.lvl
-                maze_level = Maze()
-                labyrinth_game(screen,
-                     maze_level,
-                     Player(x, y, num_of_shoots=num, level=lvl),
-                     keys=pygame.sprite.Group())
+                x, y, num, lvl = 1775, 925, 3, 1
+                w = 212
+                maze_level1 = Maze(MazeWall((5, 10), 1910, 20),
+                                   MazeWall((1895, 10), 20, 1060),
+                                   MazeWall((5, 1055), 1910, 20),
+                                   MazeWall((5, 10), 20, 1060),
+                                   MazeWall((25, 222), 215, 20),
+                                   MazeWall((217, 30), 20, 192, color='yellow'),
+                                   MazeWall((217, 454), 20, 424),
+                                   MazeWall((449, 30), 20, 212),
+                                   MazeWall((449, 30 + w * 2), 20, 212),
+                                   MazeWall((449 + w, 30), 20, 212 * 3),
+                                   MazeWall((429, w * 4 + 10), w * 2, 20),
+                                   MazeWall((4 * w, 30), 20, w),
+                                   MazeWall((4 * w, 30 + w * 2), 20, w * 2),
+                                   MazeWall((4 * w, 30 + w * 2), w * 4 + 20, 20),
+                                   MazeWall((5 * w, 30 + w), w, 20),
+                                   MazeWall((5 * w, 30 + w * 3), w, 20),
+                                   MazeWall((5 * w, 30 + w * 3), 20, w * 2 - 20),
+                                   MazeWall((6 * w, 30 + w), 20, w),
+                                   MazeWall((6 * w, 30 + w * 4), w, 20),
+                                   MazeWall((7 * w, 30), 20, w),
+                                   MazeWall((7 * w, 30 + w * 2), 20, w * 2 + 20),
+                                   MazeWall((8 * w, 30 + w), 20, w),
+                                   MazeWall((8 * w, 30 + w * 3), w, 20),
+                                   MazeWall((8 * w, 30 + w * 4), 20, w),
+                                   MazeWall((237, 30), 212, 212, isfire=True),
+                                   MazeWall((237, 30 + w), 212, 212, isfire=True),
+                                   MazeWall((237, 30 + w * 3), 212, 212, isfire=True),
+                                   MazeWall((237 + w, 30 + w * 3), 212, 212, isfire=True),
+                                   MazeWall((237 + w * 2, 30 + w * 3), 212, 212, isfire=True),
+                                   MazeWall((237 + w, 30 + w * 2), 212, 212, isfire=True),
+                                   MazeWall((207 + w * 7, 35 + w * 3), 212, 212, isfire=True))
+                labyrinth_game(screen, maze_level1,
+                                                    Player(x, y, num_of_shoots=num, level=lvl),
+                                                    keys=pygame.sprite.Group(
+                                                        Key(100 + w * 2, 100, 'yellow')),
+                                                    portal_crds=(64, 68))
+                # labyrinth_game(screen,
+                #      maze_level,
+                #      Player(x, y, num_of_shoots=num, level=lvl),
+                #      keys=pygame.sprite.Group())
                 car.set_pos(pos)
                 while CHOKED_FIRE:
                     trace.add(CHOKED_FIRE.pop())
@@ -1176,7 +1215,6 @@ trace = Maze(MazeWall((0, 638), 440, 297, color=1),
              MazeWall((1402, 830), 71, 71, isfire=True)
              )
 
-race(pygame.display.set_mode(RESOLUTION),
-     (80, 1010), trace)
 
-# main_menu()
+
+main_menu()
