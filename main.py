@@ -293,6 +293,8 @@ class Timer:
     def stop(self):
         self.running = False
         self.current_time = 0
+        self.all_pause_time = 0
+        self.bonus_time = 0
 
     def pause(self):
         if self.running:
@@ -1023,6 +1025,7 @@ def race(screen, pos, trace):
     timer = Timer((0, 950))
 
     back = True
+    try_again = False
     running = True
     pygame.mouse.set_visible(False)
 
@@ -1043,7 +1046,7 @@ def race(screen, pos, trace):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     timer.pause()
-                    back = pause_menu(screen, islevelmenu=False)
+                    back, try_again = pause_menu(screen, islevelmenu=False)
                     timer._continue()
 
             if event.type == pygame.MOUSEMOTION:
@@ -1173,6 +1176,16 @@ def race(screen, pos, trace):
         screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
         pygame.display.update()
         clock.tick(FPS)
+
+        if try_again:
+            try_again = False
+            timer.stop()
+            car.set_pos(pos)
+            while CHOKED_FIRE:
+                trace.add(CHOKED_FIRE.pop())
+
+        if not back:
+            running = False
 
 
 # main_menu()
