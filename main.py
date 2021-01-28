@@ -307,8 +307,9 @@ class Timer:
             self.all_pause_time += pygame.time.get_ticks() - self.pause_start_time
 
     def update(self):
-        if self.running:
-            self.current_time = pygame.time.get_ticks() - self.start_time - self.all_pause_time - self.bonus_time
+        if self.running and not self.pausing:
+            self.current_time = pygame.time.get_ticks() - self.start_time - self.all_pause_time - \
+                                self.bonus_time
 
     def draw(self, screen):
         font = pygame.font.Font
@@ -1039,11 +1040,13 @@ def race(screen, pos, trace):
     clock = pygame.time.Clock()
 
     while running:
+        pygame.mouse.set_visible(False)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
             if event.type == pygame.KEYDOWN:
+                timer._continue()
                 if event.key == pygame.K_ESCAPE:
                     timer.pause()
                     back, try_again = pause_menu(screen, islevelmenu=False)
@@ -1114,9 +1117,9 @@ def race(screen, pos, trace):
 
         for portal in portals:
             if pygame.sprite.collide_mask(portal, car):
+                timer.pause()
                 score_menu(screen, timer.current_time, time_to_score(timer.current_time,
                                                                      portal.lvl), portal.lvl)
-                timer.stop()
                 ready = False
 
                 while not ready:
@@ -1124,49 +1127,68 @@ def race(screen, pos, trace):
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             ready = True
 
-                x, y, num, lvl = 1775, 925, 3, 1
-                w = 212
-                maze_level1 = Maze(MazeWall((5, 10), 1910, 20),
-                                   MazeWall((1895, 10), 20, 1060),
-                                   MazeWall((5, 1055), 1910, 20),
-                                   MazeWall((5, 10), 20, 1060),
-                                   MazeWall((25, 222), 215, 20),
-                                   MazeWall((217, 30), 20, 192, color='yellow'),
-                                   MazeWall((217, 454), 20, 424),
-                                   MazeWall((449, 30), 20, 212),
-                                   MazeWall((449, 30 + w * 2), 20, 212),
-                                   MazeWall((449 + w, 30), 20, 212 * 3),
-                                   MazeWall((429, w * 4 + 10), w * 2, 20),
-                                   MazeWall((4 * w, 30), 20, w),
-                                   MazeWall((4 * w, 30 + w * 2), 20, w * 2),
-                                   MazeWall((4 * w, 30 + w * 2), w * 4 + 20, 20),
-                                   MazeWall((5 * w, 30 + w), w, 20),
-                                   MazeWall((5 * w, 30 + w * 3), w, 20),
-                                   MazeWall((5 * w, 30 + w * 3), 20, w * 2 - 20),
-                                   MazeWall((6 * w, 30 + w), 20, w),
-                                   MazeWall((6 * w, 30 + w * 4), w, 20),
-                                   MazeWall((7 * w, 30), 20, w),
-                                   MazeWall((7 * w, 30 + w * 2), 20, w * 2 + 20),
-                                   MazeWall((8 * w, 30 + w), 20, w),
-                                   MazeWall((8 * w, 30 + w * 3), w, 20),
-                                   MazeWall((8 * w, 30 + w * 4), 20, w),
-                                   MazeWall((237, 30), 212, 212, isfire=True),
-                                   MazeWall((237, 30 + w), 212, 212, isfire=True),
-                                   MazeWall((237, 30 + w * 3), 212, 212, isfire=True),
-                                   MazeWall((237 + w, 30 + w * 3), 212, 212, isfire=True),
-                                   MazeWall((237 + w * 2, 30 + w * 3), 212, 212, isfire=True),
-                                   MazeWall((237 + w, 30 + w * 2), 212, 212, isfire=True),
-                                   MazeWall((207 + w * 7, 35 + w * 3), 212, 212, isfire=True))
-                labyrinth_game(screen, maze_level1,
-                                                    Player(x, y, num_of_shoots=num, level=lvl),
-                                                    keys=pygame.sprite.Group(
-                                                        Key(100 + w * 2, 100, 'yellow')),
-                                                    portal_crds=(64, 68))
+                if portal.lvl == 1:  # ----------УРОВЕНЬ 1-----------------
+                    x, y, num, lvl = 1775, 925, 3, 1
+                    w = 212
+                    maze_level1 = Maze(MazeWall((5, 10), 1910, 20),
+                                       MazeWall((1895, 10), 20, 1060),
+                                       MazeWall((5, 1055), 1910, 20),
+                                       MazeWall((5, 10), 20, 1060),
+                                       MazeWall((25, 222), 215, 20),
+                                       MazeWall((217, 30), 20, 192, color='yellow'),
+                                       MazeWall((217, 454), 20, 424),
+                                       MazeWall((449, 30), 20, 212),
+                                       MazeWall((449, 30 + w * 2), 20, 212),
+                                       MazeWall((449 + w, 30), 20, 212 * 3),
+                                       MazeWall((429, w * 4 + 10), w * 2, 20),
+                                       MazeWall((4 * w, 30), 20, w),
+                                       MazeWall((4 * w, 30 + w * 2), 20, w * 2),
+                                       MazeWall((4 * w, 30 + w * 2), w * 4 + 20, 20),
+                                       MazeWall((5 * w, 30 + w), w, 20),
+                                       MazeWall((5 * w, 30 + w * 3), w, 20),
+                                       MazeWall((5 * w, 30 + w * 3), 20, w * 2 - 20),
+                                       MazeWall((6 * w, 30 + w), 20, w),
+                                       MazeWall((6 * w, 30 + w * 4), w, 20),
+                                       MazeWall((7 * w, 30), 20, w),
+                                       MazeWall((7 * w, 30 + w * 2), 20, w * 2 + 20),
+                                       MazeWall((8 * w, 30 + w), 20, w),
+                                       MazeWall((8 * w, 30 + w * 3), w, 20),
+                                       MazeWall((8 * w, 30 + w * 4), 20, w),
+                                       MazeWall((237, 30), 212, 212, isfire=True),
+                                       MazeWall((237, 30 + w), 212, 212, isfire=True),
+                                       MazeWall((237, 30 + w * 3), 212, 212, isfire=True),
+                                       MazeWall((237 + w, 30 + w * 3), 212, 212, isfire=True),
+                                       MazeWall((237 + w * 2, 30 + w * 3), 212, 212, isfire=True),
+                                       MazeWall((237 + w, 30 + w * 2), 212, 212, isfire=True),
+                                       MazeWall((207 + w * 7, 35 + w * 3), 212, 212, isfire=True))
+                    labyrinth_game(screen, maze_level1, Player(x, y, num_of_shoots=num, level=lvl),
+                                   keys=pygame.sprite.Group(Key(100 + w * 2, 100, 'yellow')),
+                                   portal_crds=(64, 68))
+                    car.set_pos((400, 1010))
+
+                if portal.lvl == 2:  # ----------УРОВЕНЬ 2-----------------
+                    car.set_pos((570, 395))
+                    x, y, num, lvl = 1775, 925, 3, 2
+                    w = 212
+                    maze_level2 = Maze()
+                    labyrinth_game(screen, maze_level2, Player(x, y, num_of_shoots=num, level=lvl),
+                                   keys=pygame.sprite.Group(Key(100 + w * 2, 100, 'yellow')),
+                                   portal_crds=(64, 68))
+
+                if portal.lvl == 3:  # ----------УРОВЕНЬ 3-----------------
+                    car.set_pos((120, 250))
+                    x, y, num, lvl = 1775, 925, 3, 3
+                    w = 212
+                    maze_level2 = Maze()
+                    labyrinth_game(screen, maze_level2, Player(x, y, num_of_shoots=num, level=lvl),
+                                   keys=pygame.sprite.Group(Key(100 + w * 2, 100, 'yellow')),
+                                   portal_crds=(64, 68))
+
                 # labyrinth_game(screen,
                 #      maze_level,
                 #      Player(x, y, num_of_shoots=num, level=lvl),
                 #      keys=pygame.sprite.Group())
-                car.set_pos(pos)
+                # car.set_pos(pos)
                 while CHOKED_FIRE:
                     trace.add(CHOKED_FIRE.pop())
 
@@ -1227,7 +1249,6 @@ trace = Maze(MazeWall((0, 638), 440, 297, color=1),
              MazeWall((1255, 821), 64, 64, isfire=True),
              MazeWall((1402, 830), 71, 71, isfire=True)
              )
-
 
 
 main_menu()
