@@ -18,6 +18,7 @@ issound = True
 fps_list = cycle([30, 60, 120])
 SCORE = [0, 0, 0]
 CHOKED_FIRE = []
+levels_completed = []
 
 
 class Player(pygame.sprite.Sprite): # Класс игрока, описывающий функционал персонажа
@@ -1161,28 +1162,169 @@ def race(screen, pos, trace):
                                        MazeWall((237 + w * 2, 30 + w * 3), 212, 212, isfire=True),
                                        MazeWall((237 + w, 30 + w * 2), 212, 212, isfire=True),
                                        MazeWall((207 + w * 7, 35 + w * 3), 212, 212, isfire=True))
-                    labyrinth_game(screen, maze_level1, Player(x, y, num_of_shoots=num, level=lvl),
+                    levels_completed.append(labyrinth_game(screen, maze_level1,
+                                                    Player(x, y, num_of_shoots=num, level=lvl),
                                    keys=pygame.sprite.Group(Key(100 + w * 2, 100, 'yellow')),
-                                   portal_crds=(64, 68))
+                                   portal_crds=(64, 68)))
                     car.set_pos((400, 1010))
 
                 if portal.lvl == 2:  # ----------УРОВЕНЬ 2-----------------
                     car.set_pos((570, 395))
-                    x, y, num, lvl = 1775, 925, 3, 2
-                    w = 212
-                    maze_level2 = Maze()
-                    labyrinth_game(screen, maze_level2, Player(x, y, num_of_shoots=num, level=lvl),
-                                   keys=pygame.sprite.Group(Key(100 + w * 2, 100, 'yellow')),
-                                   portal_crds=(64, 68))
+                    x, y, num, lvl = 1775, 925, 8, 2
+                    w, h = 170, 175
+                    maze_level2 = Maze(MazeWall((10, 10), w * 11, 20),
+                                       MazeWall((10, 10), 20, h * 5),
+                                       MazeWall((10 + w * 11, 10), 20, h * 6),
+                                       MazeWall((10 + w * 2, 10 + h * 6), w * 9 + 20, 20),
+                                       MazeWall((10 + w, 10), 20, h * 4),
+                                       MazeWall((10 + w * 2, 10), 20, h),
+                                       MazeWall((10 + w * 2, 10 + h * 5), 20, h),
+                                       MazeWall((10 + w * 3, 10 + h), 20, h * 2),
+                                       MazeWall((10 + w * 4, 10), 20, h * 2),
+                                       MazeWall((10 + w * 3, 10 + h * 4), 20, h),
+                                       MazeWall((10 + w * 4, 10 + h * 3), 20, h),
+                                       MazeWall((10 + w * 5, 10 + h), 20, h),
+                                       MazeWall((10 + w * 5, 10 + h * 4), 20, h),
+                                       MazeWall((10 + w * 6, 10 + h * 3), 20, h),
+                                       MazeWall((10 + w * 7, 10 + h), 20, h * 2),
+                                       MazeWall((10 + w * 8, 10 + h * 2), 20, h),
+                                       MazeWall((10 + w * 8, 10 + h * 4), 20, h),
+                                       MazeWall((10 + w * 9, 10), 20, h),
+                                       MazeWall((10 + w * 9, 10 + h * 3), 20, h),
+                                       MazeWall((10 + w * 9, 10 + h * 5), 20, h),
+                                       MazeWall((10 + w * 10, 10 + h), 20, h),
+                                       MazeWall((10 + w * 10, 10 + h * 3), 20, h),
+                                       MazeWall((10 + w * 10, 10 + h * 5), 20, h),
+                                       MazeWall((30, 10 + h * 4), w, 20, color='purple'),
+                                       MazeWall((10, 10 + h * 5), w * 2, 20),
+                                       MazeWall((10 + w, 10 + h * 2), w, 20),
+                                       MazeWall((10 + w, 10 + h * 4), w * 2, 20),
+                                       MazeWall((10 + w * 2, 10 + h), w, 20),
+                                       MazeWall((10 + w * 2, 10 + h * 4), w, 20),
+                                       MazeWall((30 + w * 3, 10 + h * 2), w, 20, color='red'),
+                                       MazeWall((10 + w * 2, 10 + h * 3), w * 4, 20),
+                                       MazeWall((10 + w * 3, 10 + h * 5), w * 5 + 20, 20),
+                                       MazeWall((10 + w * 4, 10 + h * 2), w + 20, 20),
+                                       MazeWall((10 + w * 5, 10 + h), w * 2, 20),
+                                       MazeWall((10 + w * 6, 10 + h * 4), w, 20),
+                                       MazeWall((10 + w * 8, 10 + h * 4), w + 20, 20),
+                                       MazeWall((10 + w * 7, 10 + h * 3), w + 20, 20),
+                                       MazeWall((10 + w * 8, 10 + h * 2), w * 2 + 20, 20),
+                                       MazeWall((10 + w * 10, 10 + h * 3), w, 20),
+                                       MazeWall((10 + w * 10, 10 + h * 4), w, 20),
+                                       MazeWall((10 + w * 9, 10 + h * 5), w, 20),
+                                       MazeWall((30 + w * 7, 10 + h * 2), w - 20, 20,
+                                                color='yellow'),
+                                       MazeWall((30, 10 + h), 150, 150, isfire=True),
+                                       MazeWall((30, 10 + h * 2), 150, 150, isfire=True),
+                                       MazeWall((30, 10 + h * 3), 150, 150, isfire=True),
+                                       MazeWall((30 + w * 6, 10), 150, 150, isfire=True),
+                                       MazeWall((30 + w * 7, 10), 150, 150, isfire=True),
+                                       MazeWall((30 + w * 7, 10 + h), 150, 150, isfire=True),
+                                       MazeWall((30 + w * 7, 10 + h * 3), 150, 150, isfire=True),
+                                       MazeWall((30 + w * 9, 10 + h * 2), 150, 150, isfire=True),
+                                       MazeWall((30 + w * 9, 10 + h * 3), 150, 150, isfire=True),
+                                       MazeWall((30 + w * 9, 10 + h * 4), 150, 150, isfire=True))
+                    levels_completed.append(labyrinth_game(screen,
+                                                           maze_level2,
+                                                           Player(x, y, num_of_shoots=num,
+                                                                  level=lvl),
+                                                           keys=pygame.sprite.Group(
+                                                               Key(60 + w, 60, 'yellow'),
+                                                               Key(60 + w * 2, 60, 'purple'),
+                                                               Key(60 + w * 7, 60 + h * 2, 'red')),
+                                                           portal_crds=(60, 60)))
 
                 if portal.lvl == 3:  # ----------УРОВЕНЬ 3-----------------
                     car.set_pos((120, 250))
-                    x, y, num, lvl = 1775, 925, 3, 3
-                    w = 212
-                    maze_level2 = Maze()
-                    labyrinth_game(screen, maze_level2, Player(x, y, num_of_shoots=num, level=lvl),
-                                   keys=pygame.sprite.Group(Key(100 + w * 2, 100, 'yellow')),
-                                   portal_crds=(64, 68))
+                    x, y, num, lvl = 1775, 925, 21, 3
+                    w, h = 145, 150
+                    maze_level3 = Maze(MazeWall((10, 10), w * 13, 20),
+                                       MazeWall((10, 10), 20, h * 7),
+                                       MazeWall((10, 10 + h * 7), w * 13, 20),
+                                       MazeWall((10 + w * 13, 10), 20, h * 7 + 20),
+                                       MazeWall((10 + w, 10), 20, h * 4),
+                                       MazeWall((10 + w, 10 + h * 6), 20, h, color='yellow'),
+                                       MazeWall((10 + w * 2, 10 + h), 20, h),
+                                       MazeWall((10 + w * 2, 10 + h * 3), 20, h, color='red'),
+                                       MazeWall((10 + w * 2, 10 + h * 4), 20, h),
+                                       MazeWall((10 + w * 3, 10), 20, h),
+                                       MazeWall((10 + w * 3, 10 + h * 3), 20, h),
+                                       MazeWall((10 + w * 4, 10 + h), 20, h * 4),
+                                       MazeWall((10 + w * 5, 10 + h * 2), 20, h * 5),
+                                       MazeWall((10 + w * 6, 10 + h * 2), 20, h),
+                                       MazeWall((10 + w * 6, 10 + h * 5), 20, h),
+                                       MazeWall((10 + w * 7, 10 + h * 5), 20, h * 2),
+                                       MazeWall((10 + w * 8, 10 + h * 2), 20, h * 4),
+                                       MazeWall((10 + w * 9, 10 + h), 20, h),
+                                       MazeWall((10 + w * 9, 10 + h * 5), 20, h),
+                                       MazeWall((10 + w * 10, 10 + h), 20, h * 2),
+                                       MazeWall((10 + w * 10, 10 + h * 5), 20, h),
+                                       MazeWall((10 + w * 11, 10), 20, h * 2),
+                                       MazeWall((10 + w * 12, 10 + h), 20, h * 3),
+                                       MazeWall((10 + w * 12, 10 + h * 5), 20, h),
+                                       MazeWall((10, 10 + h * 5), w * 3 + 20, 20),
+                                       MazeWall((10 + w, 10 + h * 3), w * 2 + 20, 20),
+                                       MazeWall((10 + w, 10 + h * 6), w * 3 + 20, 20),
+                                       MazeWall((10 + w * 2, 10 + h * 2), w * 2, 20),
+                                       MazeWall((10 + w * 4, 10 + h), w, 20),
+                                       MazeWall((10 + w * 5, 10 + h * 4), w * 3, 20),
+                                       MazeWall((10 + w * 6, 10 + h), w * 3, 20),
+                                       MazeWall((10 + w * 6, 10 + h * 2), w * 2, 20),
+                                       MazeWall((10 + w * 6, 10 + h * 3), w, 20),
+                                       MazeWall((10 + w * 6, 10 + h * 5), w, 20),
+                                       MazeWall((10 + w * 6, 10 + h * 6), w, 20, color='purple'),
+                                       MazeWall((10 + w * 8, 10 + h * 3), w, 20),
+                                       MazeWall((10 + w * 8, 10 + h * 6), w * 4 + 20, 20),
+                                       MazeWall((10 + w * 9, 10 + h * 2), w, 20),
+                                       MazeWall((10 + w * 9, 10 + h * 4), w * 3 + 20, 20),
+                                       MazeWall((10 + w * 9, 10 + h * 5), w, 20),
+                                       MazeWall((10 + w * 10, 10 + h * 3), w * 2, 20),
+                                       MazeWall((10 + w * 11, 10 + h * 5), w, 20),
+                                       MazeWall((40 + w, 50), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 2, 50), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 5, 50), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 9, 50), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 11, 50), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 12, 50), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 5, 50 + h), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 8, 50 + h), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 9, 50 + h), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 11, 50 + h), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 4, 50 + h * 2), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 5, 50 + h * 2), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 9, 50 + h * 2), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 4, 50 + h * 3), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 5, 50 + h * 3), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 9, 50 + h * 3), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 6, 50 + h * 3), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 8, 50 + h * 3), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 3, 50 + h * 4), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 4, 50 + h * 4), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 8, 50 + h * 4), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 11, 50 + h * 4), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 12, 50 + h * 4), 100, 100, isfire=True),
+                                       MazeWall((40, 50 + h * 5), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 1, 50 + h * 5), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 2, 50 + h * 5), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 3, 50 + h * 5), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 4, 50 + h * 5), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 5, 50 + h * 5), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 2, 50 + h * 6), 100, 100, isfire=True),
+                                       MazeWall((40 + w, 50 + h * 6), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 5, 50 + h * 6), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 6, 50 + h * 6), 100, 100, isfire=True),
+                                       MazeWall((40 + w * 9, 50 + h * 6), 100, 100, isfire=True))
+
+                    levels_completed.append(labyrinth_game(screen,
+                                                           maze_level3,
+                                                           Player(x, y, num_of_shoots=num,
+                                                                  level=lvl),
+                                                           keys=pygame.sprite.Group(
+                                                               Key(50, 50, 'yellow'),
+                                                               Key(50 + w * 6, 50 + h * 2, 'purple'),
+                                                               Key(50 + w * 6, 50 + h * 5, 'red')),
+                                                           portal_crds=(40, 50 + h * 6)))
 
                 # labyrinth_game(screen,
                 #      maze_level,
