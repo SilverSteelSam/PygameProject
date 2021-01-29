@@ -1,6 +1,7 @@
 import pygame, sys, os, random
 # from pygame.locals import *
 from itertools import cycle
+from math import sin, cos, pi
 global RESOLUTION, FPS, resolutions, fps_list, issound, levels_completed
 # Resolutions: 16:9 (1024, 576); (1152, 648); (1280, 720);
 #                   (1366, 768); (1600, 900); (1920, 1080)
@@ -561,12 +562,7 @@ def main_menu():  # -----------------MAIN MENU FUNCTION------------------------
             
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if draw == 1:
-                    labyrinth_game(screen,
-                         Maze(MazeWall((0, -1), 1920, 1),
-                              MazeWall((1920, 0), 1, 1080),
-                              MazeWall((0, 1080), 1920, 1),
-                              MazeWall((0, -1), 1, 1080)),
-                         Player(900, 900, num_of_shoots=-1))
+                    race(screen, (100, 1010), trace)
                     
                     pygame.mouse.set_visible(True)
                 elif draw == 2:
