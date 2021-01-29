@@ -10,7 +10,6 @@ resolutions = cycle([(1024, 576), (1152, 648), (1280, 720),
 fps_list = cycle([120, 15, 30, 60])
 issound = True
 levels_completed = []
-#from pygame.locals import *
 
 class Player(pygame.sprite.Sprite): # Класс игрока, описывающий функционал персонажа
     def __init__(self, x, y, num_of_shoots=None, level=0):
@@ -142,7 +141,6 @@ class Key(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        
         self.color = color
 
 
@@ -232,7 +230,6 @@ class MazeWall(pygame.sprite.Sprite):
         
     def draw(self, screen):
         if self.isfire:
-            # print(self.rect.w, self.rect.h)
             surface = pygame.transform.scale(pygame.image.load('data/fire1.png'), (self.rect.w, self.rect.h))
             screen.blit(surface, self.rect)
         else:
@@ -252,16 +249,13 @@ class MazeWall(pygame.sprite.Sprite):
 
 class Maze(pygame.sprite.Group):
     def __init__(self, *sprites):
-        super().__init__(sprites) #ДОДЕЛАТЬ---------------
+        super().__init__(sprites) 
         self.backup = sprites
-        # SPRITES WITH MAZE COLUMN
-        #print(self.up_left)
         
     def draw(self, screen):
         for sprite in self.sprites():
             sprite.draw(screen)
             
-    
     def move(self, x, y):
         for sprite in self.sprites():
             sprite.move(x, y)
@@ -357,6 +351,9 @@ def main_menu(): # -----------------MAIN MENU FUNCTION------------------------
                     pygame.mouse.set_visible(True)
                 elif draw == 2:
                     options_menu(screen)
+                    
+                elif draw == 3:
+                    credits_menu(screen)
         
         display.fill((61, 107, 214))
         menu.draw(display)
@@ -463,6 +460,45 @@ def options_menu(screen): # Функция, реализующая меню на
         screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
         pygame.display.update()
         clock.tick(FPS)
+        
+
+def credits_menu(screen):
+    global FPS, RESOLUTION
+
+    display = pygame.Surface((1920, 1080))
+    pygame.mouse.set_visible(True)
+    
+    clock = pygame.time.Clock()
+
+    menu = pygame.sprite.Group()
+    menu_sprite = pygame.sprite.Sprite()
+    menu_sprite.image = load_image('menu/credits_menu.png')
+    menu_sprite.rect = menu_sprite.image.get_rect()    
+    menu_sprite.rect.x = -1
+    menu_sprite.rect.y = -1
+    menu.add(menu_sprite)
+    
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or\
+                (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                return 0
+
+        display.fill((61, 107, 214))
+        menu.draw(display)
+        draw_text("""This game was made by Bogdan Zhdanov""", (255, 255, 255), display, 
+              10, 200, size=100)
+        draw_text("And Alexander Khramov", (255, 255, 255), display, 
+              10, 270, size=100)
+        draw_text("Using Python and Pygame", (255, 255, 255), display, 
+              10, 340, size=100)
+        draw_text("For Yandex Lyceum", (255, 255, 255), display, 
+              10, 410, size=100)
+        draw_text("January 2021", (255, 255, 255), display, 
+              10, 920, size=200)
+        screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
+        pygame.display.update()
+        clock.tick(FPS)
     
 
 def pause_menu(screen, islevelmenu): # Функция, реализующая меню паузы
@@ -513,8 +549,6 @@ def pause_menu(screen, islevelmenu): # Функция, реализующая м
                 if draw == 4:
                     return False, False
                     
-                    # pygame.mouse.set_visible(True)
-                    
                 elif draw == 3:
                     options_menu(screen)
                     
@@ -555,7 +589,6 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
     global FPS, RESOLUTION, levels_completed
     display = pygame.Surface((1920, 1080))
     try_again = False
-
     
     back = True
     
@@ -600,7 +633,6 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
         portal.rect = surface.get_rect()
         portal.rect.x = portal_crds[0]
         portal.rect.y = portal_crds[1]
-    # print(portal_crds != None)
     
     if keys:
         keys_backup = keys.copy()
