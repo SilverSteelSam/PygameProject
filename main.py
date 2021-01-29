@@ -1,19 +1,14 @@
 import pygame, sys, os, random
 # from pygame.locals import *
 from itertools import cycle
-global RESOLUTION, FPS, resolutions, fps_list, issound
-# Resolutions: 16:9 (1024, 576); (1152, 648); (1280, 720);
-#                   (1366, 768); (1600, 900); (1920, 1080)
-
-#from pygame.locals import *
-from math import sin, cos, pi
-
+global RESOLUTION, FPS, resolutions, fps_list, issound, levels_completed
 # Resolutions: 16:9 (1024, 576); (1152, 648); (1280, 720);
 #                   (1366, 768); (1600, 900); (1920, 1080)
 RESOLUTION = (1920, 1080)
 FPS = 60
 resolutions = cycle([(1024, 576), (1152, 648), (1280, 720),
-                     (1366, 768), (1600, 900), (1920, 1080)])
+               (1366, 768), (1600, 900), (1920, 1080)][::-1])
+fps_list = cycle([120, 15, 30, 60])
 issound = True
 fps_list = cycle([30, 60, 120])
 SCORE = [0, 0, 0]
@@ -51,8 +46,8 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
 
     def do_backup(self):
         self.rect.x, self.rect.y, self.num_of_shoots = self.backup
-
-
+        self.keys = []
+              
     def move(self, x, y):
         self.rect.x = x
         self.rect.y = y
@@ -61,10 +56,10 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
         global issound
         spd = 7
         if self.moving_down:
-            for sprite in pygame.sprite.spritecollide(Dummy(pygame.Rect(self.rect.x,
-                                                                        self.rect.y + spd,
-                                                                        self.rect.w,
-                                                                        self.rect.h)),
+            for sprite in pygame.sprite.spritecollide(Dummy(pygame.Rect(self.rect.x, 
+                                                                     self.rect.y + spd,
+                                                                     self.rect.w,
+                                                                     self.rect.h)),
                                                       obstacles,
                                                       dokill=False):
                 if sprite.color in self.keys:
@@ -90,8 +85,8 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
                     if issound:
                         pygame.mixer.Sound('data/sounds/dooropen.wav').play()
                     sprite.kill()
-
-            if not (pygame.sprite.spritecollideany(Dummy(pygame.Rect(self.rect.x - spd,
+                    
+            if not (pygame.sprite.spritecollideany(Dummy(pygame.Rect(self.rect.x - spd, 
                                                                      self.rect.y,
                                                                      self.rect.w,
                                                                      self.rect.h)),
@@ -108,8 +103,8 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
                     if issound:
                         pygame.mixer.Sound('data/sounds/dooropen.wav').play()
                     sprite.kill()
-
-            if not (pygame.sprite.spritecollideany(Dummy(pygame.Rect(self.rect.x,
+                    
+            if not (pygame.sprite.spritecollideany(Dummy(pygame.Rect(self.rect.x, 
                                                                      self.rect.y - spd,
                                                                      self.rect.w,
                                                                      self.rect.h)),
@@ -126,8 +121,8 @@ class Player(pygame.sprite.Sprite): # Класс игрока, описываю�
                     if issound:
                         pygame.mixer.Sound('data/sounds/dooropen.wav').play()
                     sprite.kill()
-
-            if not (pygame.sprite.spritecollideany(Dummy(pygame.Rect(self.rect.x + spd,
+                    
+            if not (pygame.sprite.spritecollideany(Dummy(pygame.Rect(self.rect.x + spd, 
                                                                      self.rect.y,
                                                                      self.rect.w,
                                                                      self.rect.h)),
@@ -369,7 +364,7 @@ class Dummy(pygame.sprite.Sprite):
     def __init__(self, rect):
         super().__init__()
         self.rect = rect   
-        
+
 
 class Button(pygame.sprite.Sprite):
     def __init__(self, image_path, number, x, y, group):
@@ -446,10 +441,8 @@ class MazeWall(pygame.sprite.Sprite):
 
 class Maze(pygame.sprite.Group):
     def __init__(self, *sprites):
-        super().__init__(sprites) #ДОДЕЛАТЬ---------------
+        super().__init__(sprites)
         self.backup = sprites
-        # SPRITES WITH MAZE COLUMN
-        #print(self.up_left)
         
     def draw(self, screen):
         for sprite in self.sprites():
@@ -481,7 +474,12 @@ def load_image(name, colorkey=None):
     return image
 
 
-def draw_text(text, color, surface, x, y, size=50):  # Функция для отрисовки текста
+def draw_text(text,
+              color,
+              surface,
+              x, y,
+              font=0,
+              size=50): # Функция для отрисовки текста
     font = pygame.font.Font(None, size)
     text_obj = font.render(text, True, color)
     text_rect = text_obj.get_rect()
@@ -563,20 +561,20 @@ def main_menu():  # -----------------MAIN MENU FUNCTION------------------------
             
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if draw == 1:
-                    # labyrinth_game(screen,
-                    #      Maze(MazeWall((0, -1), 1920, 1),
-                    #           MazeWall((1920, 0), 1, 1080),
-                    #           MazeWall((0, 1080), 1920, 1),
-                    #           MazeWall((0, -1), 1, 1080)),
-                    #      Player(900, 900, num_of_shoots=-1))
-
-                    race(pygame.display.set_mode(RESOLUTION),
-                         (80, 1010), trace)
-
+                    labyrinth_game(screen,
+                         Maze(MazeWall((0, -1), 1920, 1),
+                              MazeWall((1920, 0), 1, 1080),
+                              MazeWall((0, 1080), 1920, 1),
+                              MazeWall((0, -1), 1, 1080)),
+                         Player(900, 900, num_of_shoots=-1))
+                    
                     pygame.mouse.set_visible(True)
                 elif draw == 2:
                     options_menu(screen)
-        
+
+                elif draw == 3:
+                    credits_menu(screen)
+
         display.fill((61, 107, 214))
         menu.draw(display)
         all_buttons.draw(display)
@@ -683,7 +681,46 @@ def options_menu(screen): # Функция, реализующая меню на
         screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
         pygame.display.update()
         clock.tick(FPS)
-    
+
+
+def credits_menu(screen):
+    global FPS, RESOLUTION
+
+    display = pygame.Surface((1920, 1080))
+    pygame.mouse.set_visible(True)
+
+    clock = pygame.time.Clock()
+
+    menu = pygame.sprite.Group()
+    menu_sprite = pygame.sprite.Sprite()
+    menu_sprite.image = load_image('menu/credits_menu.png')
+    menu_sprite.rect = menu_sprite.image.get_rect()
+    menu_sprite.rect.x = -1
+    menu_sprite.rect.y = -1
+    menu.add(menu_sprite)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or\
+                (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                return 0
+
+        display.fill((61, 107, 214))
+        menu.draw(display)
+        draw_text("""This game was made by Bogdan Zhdanov""", (255, 255, 255), display,
+              10, 200, size=100)
+        draw_text("And Alexander Khramov", (255, 255, 255), display,
+              10, 270, size=100)
+        draw_text("Using Python and Pygame", (255, 255, 255), display,
+              10, 340, size=100)
+        draw_text("For Yandex Lyceum", (255, 255, 255), display,
+              10, 410, size=100)
+        draw_text("January 2021", (255, 255, 255), display,
+              10, 920, size=200)
+        screen.blit(pygame.transform.scale(display, RESOLUTION), (0, 0))
+        pygame.display.update()
+        clock.tick(FPS)
+
 
 def pause_menu(screen, islevelmenu): # Функция, реализующая меню паузы
     global FPS, RESOLUTION
@@ -733,12 +770,11 @@ def pause_menu(screen, islevelmenu): # Функция, реализующая м
                 if draw == 4:
                     return False, False
 
-                    # pygame.mouse.set_visible(True)
-
                 elif draw == 3:
                     options_menu(screen)
-
+                    
                 elif draw == 2: # Try again
+                    pygame.mouse.set_visible(False)
                     return True, True
 
         display.fill((61, 107, 214))
@@ -771,7 +807,7 @@ def pause_menu(screen, islevelmenu): # Функция, реализующая м
 
 def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Функция, реализующая саму игру
 
-    global FPS, RESOLUTION
+    global FPS, RESOLUTION, levels_completed
     display = pygame.Surface((1920, 1080))
     try_again = False
 
@@ -818,9 +854,9 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
         portal.rect = surface.get_rect()
         portal.rect.x = portal_crds[0]
         portal.rect.y = portal_crds[1]
-    print(portal_crds != None)
 
-
+    if keys:
+        keys_backup = keys.copy()
     all_keys = keys
     
     draw_crosshair = False, 0
@@ -877,9 +913,12 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
                                              event.pos[1] * 1080 / RESOLUTION[1])))
 
         if try_again:
+            bullets_group.empty()
             player.do_backup()
             maze.do_backup()
             try_again = False
+
+            all_keys = keys_backup.copy()
 
 
         if back:
@@ -929,7 +968,7 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
                                         MazeWall((237 + w * 2, 30 + w * 3), 212, 212, isfire=True),
                                         MazeWall((237 + w, 30 + w * 2), 212, 212, isfire=True),
                                         MazeWall((207  + w * 7, 35 + w * 3), 212, 212, isfire=True))
-                    player.levels.append(labyrinth_game(screen,
+                    levels_completed.append(labyrinth_game(screen,
                          maze_level1,
                          Player(x, y, num_of_shoots=num, level=lvl),
                          keys=pygame.sprite.Group(Key(100 + w * 2, 100, 'yellow')),
@@ -965,18 +1004,20 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
                     sound.play()
                     return 1
 
+                    return player.level
+
             bullets_group.update()
             bullets_group.draw(display)
             if not player.level:
-                if 1 in player.levels:
+                if 1 in levels_completed:
                     draw_text('First level: Completed', (255, 255, 255), display, 120, 150)
                 else:
                     draw_text('First level: Not completed', (255, 255, 255), display, 120, 150)
-                if 2 in player.levels:
+                if 2 in levels_completed:
                     draw_text('Second level: Completed', (255, 255, 255), display, 710, 150)
                 else:
                     draw_text('Second level: Not completed', (255, 255, 255), display, 700, 150)
-                if 3 in player.levels:
+                if 3 in levels_completed:
                     draw_text('Third level: Completed', (255, 255, 255), display, 1385, 150)
                 else:
                     draw_text('Third level: Not completed', (255, 255, 255), display, 1385, 150)
