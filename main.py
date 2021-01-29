@@ -1078,6 +1078,7 @@ def race(screen, pos, trace):
     back = True
     try_again = False
     running = True
+    ready = True
     pygame.mouse.set_visible(False)
 
     fon = pygame.image.load("data/trace.jpg")
@@ -1167,9 +1168,9 @@ def race(screen, pos, trace):
 
         for portal in portals:
             if pygame.sprite.collide_mask(portal, car):
-                timer.pause()
                 score_menu(screen, timer.current_time, time_to_score(timer.current_time,
                                                                      portal.lvl), portal.lvl)
+                timer.stop()
                 ready = False
 
                 while not ready:
@@ -1212,9 +1213,9 @@ def race(screen, pos, trace):
                                        MazeWall((237 + w, 30 + w * 2), 212, 212, isfire=True),
                                        MazeWall((207 + w * 7, 35 + w * 3), 212, 212, isfire=True))
                     levels_completed.append(labyrinth_game(screen, maze_level1,
-                                                    Player(x, y, num_of_shoots=num, level=lvl),
-                                   keys=pygame.sprite.Group(Key(100 + w * 2, 100, 'yellow')),
-                                   portal_crds=(64, 68)))
+                                                           Player(x, y, num_of_shoots=num, level=lvl),
+                                                           keys=pygame.sprite.Group(Key(100 + w * 2, 100, 'yellow')),
+                                                           portal_crds=(64, 68)))
                     car.set_pos((400, 1010))
 
                 if portal.lvl == 2:  # ----------УРОВЕНЬ 2-----------------
@@ -1391,6 +1392,7 @@ def race(screen, pos, trace):
                 # car.set_pos(pos)
                 while CHOKED_FIRE:
                     trace.add(CHOKED_FIRE.pop())
+                ready = False
 
         if pygame.sprite.collide_rect(car, startline):
             timer.start()
@@ -1408,6 +1410,12 @@ def race(screen, pos, trace):
 
         if not back:
             running = False
+
+        while not ready:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    ready = True
+                    timer.start()
 
 
 # main_menu()
