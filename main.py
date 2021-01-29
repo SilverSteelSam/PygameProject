@@ -994,8 +994,6 @@ def labyrinth_game(screen, maze, player, keys=False, portal_crds=None): # Фун
                     sound = pygame.mixer.Sound('data/sounds/level_end.wav')
                     sound.set_volume(0.1)
                     sound.play()
-                    return 1
-
                     return player.level
 
             bullets_group.update()
