@@ -264,6 +264,9 @@ class House(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, completed=False):
         super().__init__()
         self.image = pygame.Surface((width, height))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
         pygame.draw.polygon(self.image, pygame.Color((229, 239, 193)),
                             ((0, 0), (width, height), (width, 0)))
         pygame.draw.polygon(self.image, pygame.Color((199, 200, 169)),
@@ -271,10 +274,16 @@ class House(pygame.sprite.Sprite):
         pygame.draw.rect(self.image, pygame.Color((97, 97, 97)), pygame.Rect(0, 0, width, height),
                          width=8)
         pygame.draw.line(self.image, pygame.Color((97, 97, 97)), (0, 0), (width, height), width=8)
+        pygame.draw.circle(self.image, pygame.Color((97, 97, 97)), (self.rect.w // 2,
+                                                                    self.rect.h // 2), 25)
+        color = pygame.Color((247, 219, 105))
+        pygame.draw.circle(self.image, color, (self.rect.w // 2, self.rect.h // 2), 12)
 
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+
+
+    def update(self):
+        color = pygame.Color((150, 250, 248))
+        pygame.draw.circle(self.image, color, (self.rect.w // 2, self.rect.h // 2), 12)
 
 
 class Timer:
@@ -1020,9 +1029,12 @@ def race(screen, pos, trace):
         Portal(47, 179, 21, 3)
     )
     bullets_group = Group_custom_draw()
-    houses = pygame.sprite.Group(House(421, 767, 194, 150),
-                                 House(829, 303, 175, 158),
-                                 House(0, 5, 175, 157))
+    house_1 = House(421, 767, 194, 150)
+    house_2 = House(829, 303, 175, 158)
+    house_3 = House(0, 5, 175, 157)
+    houses = pygame.sprite.Group(house_1,
+                                 house_2,
+                                 house_3)
     startline = StartLine(pygame.Rect(567, 935, 20, 1080 - 935))
     timer = Timer((0, 950))
 
@@ -1325,6 +1337,15 @@ def race(screen, pos, trace):
                                                                Key(50 + w * 6, 50 + h * 2, 'purple'),
                                                                Key(50 + w * 6, 50 + h * 5, 'red')),
                                                            portal_crds=(40, 50 + h * 6)))
+                if 1 in levels_completed:
+                    house_1.completed = True
+                    house_1.update()
+                if 2 in levels_completed:
+                    house_2.completed = True
+                    house_2.update()
+                if 3 in levels_completed:
+                    house_3.completed = True
+                    house_3.update()
 
                 # labyrinth_game(screen,
                 #      maze_level,
