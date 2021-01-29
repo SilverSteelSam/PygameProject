@@ -179,7 +179,6 @@ class Car(pygame.sprite.Sprite):
         self.dif_angle = direction * self.spd / 2
 
     def update(self):
-        origin_image = self.image.copy()
 
         self.image = pygame.transform.rotate(Car.BASE_IMAGE, self.angle)
 
@@ -318,7 +317,6 @@ class Timer:
                                 self.bonus_time
 
     def draw(self, screen):
-        font = pygame.font.Font
         draw_text(f"Time: {self.current_time}", pygame.Color("white"), screen,
                   *self.pos)
 
@@ -505,7 +503,6 @@ def score_menu(screen, time, score, lvl):
     draw_text(str(sum(SCORE)), pygame.Color("white"), display, 1075, 730, size=75)
     screen.blit(pygame.transform.scale(display, (RESOLUTION[0] // 2, RESOLUTION[1] // 2)),
                 (RESOLUTION[0] // 4, RESOLUTION[1] // 4))
-    # screen.blit(display, (0, 0))
     pygame.display.update()
     running = True
     while running:
@@ -619,7 +616,6 @@ def options_menu(screen): # Функция, реализующая меню на
         for event in pygame.event.get():
             if event.type == pygame.QUIT or\
                 (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-                # pygame.mouse.set_visible(False)
                 return True
 
             if event.type == pygame.MOUSEMOTION:
@@ -1384,12 +1380,6 @@ def race(screen, pos, trace):
                 if 3 in levels_completed:
                     house_3.completed = True
                     house_3.update()
-
-                # labyrinth_game(screen,
-                #      maze_level,
-                #      Player(x, y, num_of_shoots=num, level=lvl),
-                #      keys=pygame.sprite.Group())
-                # car.set_pos(pos)
                 while CHOKED_FIRE:
                     trace.add(CHOKED_FIRE.pop())
                 ready = False
